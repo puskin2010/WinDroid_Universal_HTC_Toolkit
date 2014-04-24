@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Ionic.Zip;
 using MetroFramework.Forms;
 using RegawMOD.Android;
 
@@ -317,8 +318,11 @@ namespace WinDroid_Universal_HTC_Toolkit
                 }
                 else if (AndroidLib.Selector == "One XL SuperCID")
                 {
-                    //ZipFile.ExtractToDirectory("./Data/Installers/SuperCID.zip", "./Data/Installers");
-                    //File.Delete("./Data/Installers/SuperCID.zip");
+                    using(ZipFile zip = ZipFile.Read("./Data/Installers/SuperCID.zip"))
+                    {
+                        zip.ExtractAll("./Data/Installers");
+                    }
+                    File.Delete("./Data/Installers/SuperCID.zip");
                     soffProgressBar.Value = 100;
                     Process.Start(Application.StartupPath + "/Data/Installers/run.bat");
                     Close();
