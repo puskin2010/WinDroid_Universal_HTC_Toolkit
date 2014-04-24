@@ -1,12 +1,13 @@
-﻿using MetroFramework.Forms;
-using Microsoft.VisualBasic;
-using RegawMOD.Android;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using MetroFramework.Forms;
+using Microsoft.VisualBasic;
+using WinDroid_Universal_HTC_Toolkit;
+using RegawMOD.Android;
 
 namespace WinDroid
 {
@@ -14,13 +15,6 @@ namespace WinDroid
     {
         private AndroidController _android;
         private Device _device;
-
-        public static class AndroidLib
-        {
-            public static string InitialCmd = "";
-            public static string SecondaryCmd = "";
-            public static string Selector = "";
-        }
 
         public MainForm()
         {
@@ -35,8 +29,10 @@ namespace WinDroid
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.", @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                MessageBox.Show(this,
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -62,12 +58,12 @@ namespace WinDroid
                         if (line == "None")
                         {
                             DialogResult dialogResult = MessageBox.Show(this,
-                            @"Thanks for choosing the WinDroid Toolkit." + "\n" +
-                            @"A specific phone has not been chosen." + "\n" +
-                            @"Some toolkit features may not function correctly." + "\n" +
-                            @"Would you like to choose one at this time?" + "\n",
-                            @"Welcome To WinDroid!", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
+                                @"Thanks for choosing the WinDroid Toolkit." + "\n" +
+                                @"A specific phone has not been chosen." + "\n" +
+                                @"Some toolkit features may not function correctly." + "\n" +
+                                @"Would you like to choose one at this time?" + "\n",
+                                @"Welcome To WinDroid!", MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Information);
                             if (dialogResult == DialogResult.Yes)
                             {
                                 changePhoneComboBox.Text = "Choose";
@@ -172,9 +168,6 @@ namespace WinDroid
                         }
                     }
                 }
-                else
-                {
-                }
             }
             catch (Exception ex)
             {
@@ -206,7 +199,8 @@ namespace WinDroid
                             {
                                 DialogResult dialogResult2 =
                                     MessageBox.Show(this,
-                                        @"You are missing some ADB Drivers!" + "\n" + "They are required for your phone to connect properly with the computer. Would you like to install them now?",
+                                        @"You are missing some ADB Drivers!" + "\n" +
+                                        "They are required for your phone to connect properly with the computer. Would you like to install them now?",
                                         @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                                 if (dialogResult2 == DialogResult.Yes)
                                 {
@@ -217,7 +211,8 @@ namespace WinDroid
                                     DialogResult dialogResult3 =
                                         MessageBox.Show(this,
                                             @"Would you like to be reminded of this the next time you open the toolkit?",
-                                            @"Just double checking.", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                                            @"Just double checking.", MessageBoxButtons.YesNo,
+                                            MessageBoxIcon.Information);
                                     if (dialogResult3 == DialogResult.Yes)
                                     {
                                         sr.Close();
@@ -340,7 +335,7 @@ namespace WinDroid
                 MessageBox.Show(this,
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -361,7 +356,7 @@ namespace WinDroid
                 MessageBox.Show(this,
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -473,7 +468,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -495,7 +490,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -580,7 +575,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -602,7 +597,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -636,7 +631,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -654,7 +649,11 @@ namespace WinDroid
                         AndroidLib.InitialCmd = "reboot recovery";
                         noReturnADBCommand.RunWorkerAsync();
                         MessageBox.Show(
-                            @"SuperSU was successfully pushed! Your phone will now reboot to Recovery." + "\n" + "Once there, hit the Install button in the top left corner of TWRP." + "\n" + "Then, scroll down until you see SuperSU.zip. Tap on it, and confirm flashing it." + "\n" + "Once it finishes flashing, reboot your phone back to Android." + "\n" + "\n" + "Congratulations! Your phone is now rooted!",
+                            @"SuperSU was successfully pushed! Your phone will now reboot to Recovery." + "\n" +
+                            "Once there, hit the Install button in the top left corner of TWRP." + "\n" +
+                            "Then, scroll down until you see SuperSU.zip. Tap on it, and confirm flashing it." + "\n" +
+                            "Once it finishes flashing, reboot your phone back to Android." + "\n" + "\n" +
+                            "Congratulations! Your phone is now rooted!",
                             @"SuperSU Push Successful!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         flashSuperSUButton.Enabled = true;
                     }
@@ -664,7 +663,12 @@ namespace WinDroid
                         noReturnADBCommand.RunWorkerAsync();
                         MessageBox.Show(
                             openFileDialog1.SafeFileName +
-                            @" was successfully pushed! Your phone will now reboot into Recovery." + "\n" + "Once there, hit the Backup button and do a backup of your current ROM." + "\n" + "Then, go back and hit the Wipe button to wipe your current ROM and allow space for the new ROM to be flashed" + "\n" + "Then, hit the Install button in the top left corner of TWRP." + "\n" + "Then, scroll down until you see the ROM file you previously chose. Tap on it, and confirm flashing it." + "\n" + "Once it finishes flashing, reboot your phone back to Android.",
+                            @" was successfully pushed! Your phone will now reboot into Recovery." + "\n" +
+                            "Once there, hit the Backup button and do a backup of your current ROM." + "\n" +
+                            "Then, go back and hit the Wipe button to wipe your current ROM and allow space for the new ROM to be flashed" +
+                            "\n" + "Then, hit the Install button in the top left corner of TWRP." + "\n" +
+                            "Then, scroll down until you see the ROM file you previously chose. Tap on it, and confirm flashing it." +
+                            "\n" + "Once it finishes flashing, reboot your phone back to Android.",
                             @"ROM Push Successful!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         flashROMButton.Enabled = true;
                     }
@@ -704,7 +708,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -739,7 +743,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -757,15 +761,19 @@ namespace WinDroid
                         Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(_device, AndroidLib.InitialCmd,
                             AndroidLib.SecondaryCmd)));
                     sw.WriteLine(" ");
-                    sw.WriteLine("PLEASE COPY EVERYTHING FROM <<<< Indentifier Token Start >>>> TO <<<< Indentifier Token End >>>>!");
+                    sw.WriteLine(
+                        "PLEASE COPY EVERYTHING FROM <<<< Indentifier Token Start >>>> TO <<<< Indentifier Token End >>>>!");
                     sw.WriteLine("PLEASE ENSURE THAT YOU DELETE ALL (bootloader)'s AS WELL!");
                     sw.WriteLine(" ");
                     sw.WriteLine("NEXT, SIGN IN TO YOUR HTC DEV ACCOUNT ON THE WEBPAGE THAT JUST OPENED!");
-                    sw.WriteLine("IF YOU DO NOT HAVE ONE, CREATE AND ACTIVATE AN ACCOUNT WITH A VALID EMAIL ADDRESS THEN COME BACK TO THAT LINK!");
-                    sw.WriteLine("THEN, PASTE THE TOKEN ID YOU JUST COPIED AT THE BOTTOM OF THE HTCDEV WEBPAGE THAT JUST OPENED!");
+                    sw.WriteLine(
+                        "IF YOU DO NOT HAVE ONE, CREATE AND ACTIVATE AN ACCOUNT WITH A VALID EMAIL ADDRESS THEN COME BACK TO THAT LINK!");
+                    sw.WriteLine(
+                        "THEN, PASTE THE TOKEN ID YOU JUST COPIED AT THE BOTTOM OF THE HTCDEV WEBPAGE THAT JUST OPENED!");
                     sw.WriteLine("HIT SUBMIT, AND WAIT FOR THE EMAIL WITH THE UNLOCK BINARY FILE!");
                     sw.WriteLine(" ");
-                    sw.WriteLine("ONCE YOU HAVE RECEIVED THE UNLOCK FILE IN YOUR EMAIL, YOU CAN CONTINUE ON TO THE NEXT STEP!");
+                    sw.WriteLine(
+                        "ONCE YOU HAVE RECEIVED THE UNLOCK FILE IN YOUR EMAIL, YOU CAN CONTINUE ON TO THE NEXT STEP!");
                     sw.WriteLine("THIS FILE IS SAVED AS token.txt WITHIN THE DATA FOLDER IF NEEDED FOR FUTURE USE!");
                 }
                 Process.Start("http://www.htcdev.com/bootloader/unlock-instructions/page-3");
@@ -779,7 +787,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -799,7 +807,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -817,11 +825,14 @@ namespace WinDroid
                     {
                         if (statusLabel.Text == @"Status: Online")
                         {
-                            DialogResult dialogResult = MessageBox.Show(@"This is an app to be installed on your phone that will automatically give you SuperCID. Would you like to download and install it now?", @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            DialogResult dialogResult =
+                                MessageBox.Show(
+                                    @"This is an app to be installed on your phone that will automatically give you SuperCID. Would you like to download and install it now?",
+                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if (dialogResult == DialogResult.Yes)
                             {
-                                var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                                WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "Droid DNA SuperCID";
+                                var phoneDownload = new PhoneDownload();
+                                PhoneDownload.AndroidLib.Selector = "Droid DNA SuperCID";
                                 phoneDownload.mainLabel.Text = "Downloading SuperCID Files...";
                                 phoneDownload.Show();
                             }
@@ -841,11 +852,14 @@ namespace WinDroid
                     {
                         if (statusLabel.Text == @"Status: Online")
                         {
-                            DialogResult dialogResult = MessageBox.Show(@"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download and install it now?", @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            DialogResult dialogResult =
+                                MessageBox.Show(
+                                    @"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download and install it now?",
+                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if (dialogResult == DialogResult.Yes)
                             {
-                                var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                                WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One XL SuperCID";
+                                var phoneDownload = new PhoneDownload();
+                                PhoneDownload.AndroidLib.Selector = "One XL SuperCID";
                                 phoneDownload.mainLabel.Text = "Downloading SuperCID...";
                                 phoneDownload.Show();
                             }
@@ -868,7 +882,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -927,7 +941,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1001,7 +1015,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1034,8 +1048,8 @@ namespace WinDroid
                     else
                     {
                         MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -1049,7 +1063,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1082,8 +1096,8 @@ namespace WinDroid
                     else
                     {
                         MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -1097,7 +1111,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1130,8 +1144,8 @@ namespace WinDroid
                     else
                     {
                         MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -1145,7 +1159,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1186,7 +1200,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1205,7 +1219,7 @@ namespace WinDroid
                             "\n" + "\n" +
                             @"Afterwards, use the 'Flash Kernel' option to flash the boot.img that came with your ROM if needed." +
                             "\n" + "\n" +
-                             @"The process can take awhile depending on the size of the ROM." +
+                            @"The process can take awhile depending on the size of the ROM." +
                             "\n" + "\n" + @"Are you ready to continue?", @"Flash ROM", MessageBoxButtons.YesNo,
                             MessageBoxIcon.Information);
                     if (dialogResult == DialogResult.Yes)
@@ -1239,7 +1253,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1311,7 +1325,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1329,7 +1343,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1347,7 +1361,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1377,7 +1391,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1407,7 +1421,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1437,7 +1451,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1493,8 +1507,8 @@ namespace WinDroid
                     else
                     {
                         MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1503,7 +1517,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1542,7 +1556,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1585,7 +1599,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1598,7 +1612,7 @@ namespace WinDroid
             {
                 if (statusLabel.Text == @"Status: Online")
                 {
-                    var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                    string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                     DialogResult dialogResult =
                         MessageBox.Show(
                             @"This will create a full backup of the data on your phone." + "\n" + "\n" +
@@ -1633,7 +1647,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1673,7 +1687,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1712,7 +1726,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1747,7 +1761,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1778,7 +1792,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1789,7 +1803,7 @@ namespace WinDroid
         {
             try
             {
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + ".txt"))
                 {
                     sw.WriteLine(
@@ -1805,7 +1819,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1835,7 +1849,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1846,7 +1860,7 @@ namespace WinDroid
         {
             try
             {
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + "_DMESG.txt"))
                 {
                     sw.WriteLine(Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(_device, true, AndroidLib.InitialCmd)));
@@ -1861,7 +1875,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1891,7 +1905,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1921,7 +1935,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -1993,7 +2007,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2065,7 +2079,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2091,7 +2105,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2126,7 +2140,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2157,7 +2171,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2188,7 +2202,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2219,7 +2233,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2234,7 +2248,8 @@ namespace WinDroid
                 {
                     DialogResult dialogResult =
                         MessageBox.Show(this,
-                            @"This will allow you to flash a custom Custom Recovery." + "\n" + "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
+                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
+                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
                             @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                     if (dialogResult == DialogResult.Yes)
@@ -2260,7 +2275,8 @@ namespace WinDroid
                 {
                     DialogResult dialogResult =
                         MessageBox.Show(this,
-                            @"This will allow you to flash a custom Custom Recovery." + "\n" + "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
+                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
+                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
                             @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                     if (dialogResult == DialogResult.Yes)
@@ -2293,7 +2309,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2333,7 +2349,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2346,8 +2362,8 @@ namespace WinDroid
             {
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("Amaze"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "Amaze";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "Amaze";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2362,8 +2378,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("Desire HD"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "Desire HD";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "Desire HD";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2378,8 +2394,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("Desire X"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "Desire X";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "Desire X";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2394,8 +2410,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("Droid DNA"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "Droid DNA";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "Droid DNA";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = true;
                     firstTWRPButton.Enabled = true;
@@ -2410,8 +2426,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("EVO 4G LTE"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "EVO 4G LTE";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "EVO 4G LTE";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2426,8 +2442,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One (M7)"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One (M7)";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One (M7)";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2442,8 +2458,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One (M8)"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One (M8)";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One (M8)";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2458,8 +2474,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One S"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One S";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One S";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2474,8 +2490,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One V"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One V";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One V";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2490,8 +2506,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One X"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One X";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One X";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2506,8 +2522,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One XL"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One XL";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One XL";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = true;
                     firstTWRPButton.Enabled = true;
@@ -2522,8 +2538,8 @@ namespace WinDroid
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One X+"))
                 {
-                    var phoneDownload = new WinDroid_Universal_HTC_Toolkit.PhoneDownload();
-                    WinDroid_Universal_HTC_Toolkit.PhoneDownload.AndroidLib.Selector = "One X+";
+                    var phoneDownload = new PhoneDownload();
+                    PhoneDownload.AndroidLib.Selector = "One X+";
                     phoneDownload.Show();
                     gainSuperCIDButton.Enabled = false;
                     firstTWRPButton.Enabled = true;
@@ -2552,9 +2568,11 @@ namespace WinDroid
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.", "Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    "Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                System.IO.StreamWriter file = new System.IO.StreamWriter("./Data/Logs/" + fileDateTime.ToString() + ".txt");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
             }
@@ -2595,7 +2613,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2606,14 +2624,15 @@ namespace WinDroid
         {
             try
             {
-                Process.Start("https://docs.google.com/forms/d/1fBsKXhHilnwtqDQdJuJ9dDpxSB5cZMu5zAEWsM_ogGE/viewform?usp=send_form");
+                Process.Start(
+                    "https://docs.google.com/forms/d/1fBsKXhHilnwtqDQdJuJ9dDpxSB5cZMu5zAEWsM_ogGE/viewform?usp=send_form");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2631,7 +2650,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
@@ -2691,5 +2710,16 @@ namespace WinDroid
                 file.Close();
             }
         }
+
+        #region Nested type: AndroidLib
+
+        public static class AndroidLib
+        {
+            public static string InitialCmd = "";
+            public static string SecondaryCmd = "";
+            public static string Selector = "";
+        }
+
+        #endregion
     }
 }

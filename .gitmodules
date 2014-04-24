@@ -1,0 +1,3 @@
+[submodule "Depencies/AndroidLib"]
+	path = Depencies/AndroidLib
+	url = https://github.com/regaw-leinad/AndroidLib
