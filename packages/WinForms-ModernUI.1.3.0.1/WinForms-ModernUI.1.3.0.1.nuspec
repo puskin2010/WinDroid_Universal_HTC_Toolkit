@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>WinForms-ModernUI</id>
+    <version>1.3.0.1</version>
+    <title>MetroFramework - WinForms on steroids.</title>
+    <authors>Sven Walter / Peter Sunde</authors>
+    <owners>Sven Walter / Peter Sunde</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>http://viperneo.github.io/winforms-modernui/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Metro UI Framework for .NET WinForms.
+
+This ist not my own Framework it is Created by Sven walter and Peter Sunde, I just packet everything up and created this NuGet-Package</description>
+    <copyright>Sven Walter / Peter Sunde</copyright>
+  </metadata>
+</package>
