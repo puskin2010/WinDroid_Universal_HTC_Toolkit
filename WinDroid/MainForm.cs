@@ -49,124 +49,109 @@ namespace WinDroid
 
             try
             {
-                if (File.Exists("./Data/Settings/Phone.ini"))
-                {
-                    using (var sr = new StreamReader("./Data/Settings/Phone.ini"))
-                    {
-                        String line = sr.ReadToEnd();
-                        if (line == "None")
+
+                        switch (Properties.Settings.Default.SelectedDevice)
                         {
-                            DialogResult dialogResult = MessageBox.Show(this,
-                                @"Thanks for choosing the WinDroid Toolkit." + "\n" +
-                                @"A specific phone has not been chosen." + "\n" +
-                                @"Some toolkit features may not function correctly." + "\n" +
-                                @"Would you like to choose one at this time?" + "\n",
-                                @"Welcome To WinDroid!", MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Information);
-                            if (dialogResult == DialogResult.Yes)
+                            case "None":
                             {
-                                changePhoneComboBox.Text = "Choose";
-                                mainTabControl.SelectedIndex = 3;
+                                DialogResult pickDeviceDialogResult = MessageBox.Show(this,
+                                    @"Thanks for choosing the WinDroid Toolkit." + "\n" +
+                                    @"A specific phone has not been chosen." + "\n" +
+                                    @"Some toolkit features may not function correctly." + "\n" +
+                                    @"Would you like to choose one at this time?" + "\n",
+                                    @"Welcome To WinDroid!", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Information);
+                                if (pickDeviceDialogResult == DialogResult.Yes)
+                                {
+                                    changePhoneComboBox.Text = "Choose";
+                                    mainTabControl.SelectedIndex = 3;
+                                }
                             }
+                                break;
+                            case "Amaze":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "Amaze";
+                                changePhoneComboBox.Text = "Amaze";
+                                break;
+                            case "Desire HD":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "Desire HD";
+                                changePhoneComboBox.Text = "Desire HD";
+                                break;
+                            case "Desire X":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "Hboot 1.25 (JB)";
+                                secondTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "Hboot 1.24 (ICS)";
+                                changePhoneComboBox.Text = "Desire X";
+                                break;
+                            case "Droid DNA":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "Droid DNA";
+                                gainSuperCIDButton.Enabled = true;
+                                changePhoneComboBox.Text = "Droid DNA";
+                                break;
+                            case "EVO 4G LTE":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "EVO 4G LTE";
+                                changePhoneComboBox.Text = "EVO 4G LTE";
+                                break;
+                            case "One (M7)":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "GSM One (M7)";
+                                secondTWRPButton.Enabled = true;
+                                thirdTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "CDMA One (M7)";
+                                secondTWRPButton.Text = "Verizon";
+                                thirdTWRPButton.Text = "Sprint";
+                                changePhoneComboBox.Text = "One (M7)";
+                                break;
+                            case "One (M8)":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "GSM One (M8)";
+                                secondTWRPButton.Enabled = true;
+                                thirdTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "CDMA One (M8)";
+                                secondTWRPButton.Text = "Verizon";
+                                thirdTWRPButton.Text = "Sprint";
+                                changePhoneComboBox.Text = "One (M8)";
+                                break;
+                            case "One S":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "One S (S4)";
+                                secondTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "One S (S3_C2) ";
+                                changePhoneComboBox.Text = "Desire X";
+                                break;
+                            case "One V":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "PrimoU (GSM)";
+                                secondTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "PrimoC (CDMA)";
+                                changePhoneComboBox.Text = "One V";
+                                break;
+                            case "One X":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "One X";
+                                changePhoneComboBox.Text = "One X";
+                                break;
+                            case "One XL":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "One XL";
+                                gainSuperCIDButton.Enabled = true;
+                                changePhoneComboBox.Text = "One XL";
+                                break;
+                            case "One X+":
+                                firstTWRPButton.Enabled = true;
+                                firstRecoveriesGroupBox.Text = "International X+";
+                                secondTWRPButton.Enabled = true;
+                                secondRecoveriesGroupBox.Text = "AT&&T One X+";
+                                changePhoneComboBox.Text = "One X+";
+                                break;
+                            case "Other":
+                                changePhoneComboBox.Text = "Other";
+                                break;
                         }
-                        if (line == "Amaze")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Amaze";
-                            changePhoneComboBox.Text = "Amaze";
-                        }
-                        if (line == "Desire HD")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Desire HD";
-                            changePhoneComboBox.Text = "Desire HD";
-                        }
-                        if (line == "Desire X")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Hboot 1.25 (JB)";
-                            secondTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "Hboot 1.24 (ICS)";
-                            changePhoneComboBox.Text = "Desire X";
-                        }
-                        if (line == "Droid DNA")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Droid DNA";
-                            gainSuperCIDButton.Enabled = true;
-                            changePhoneComboBox.Text = "Droid DNA";
-                        }
-                        if (line == "EVO 4G LTE")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "EVO 4G LTE";
-                            changePhoneComboBox.Text = "EVO 4G LTE";
-                        }
-                        if (line == "One (M7)")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "GSM One (M7)";
-                            secondTWRPButton.Enabled = true;
-                            thirdTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "CDMA One (M7)";
-                            secondTWRPButton.Text = "Verizon";
-                            thirdTWRPButton.Text = "Sprint";
-                            changePhoneComboBox.Text = "One (M7)";
-                        }
-                        if (line == "One (M8)")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "GSM One (M8)";
-                            secondTWRPButton.Enabled = true;
-                            thirdTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "CDMA One (M8)";
-                            secondTWRPButton.Text = "Verizon";
-                            thirdTWRPButton.Text = "Sprint";
-                            changePhoneComboBox.Text = "One (M8)";
-                        }
-                        if (line == "One S")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "One S (S4)";
-                            secondTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "One S (S3_C2) ";
-                            changePhoneComboBox.Text = "Desire X";
-                        }
-                        if (line == "One V")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "PrimoU (GSM)";
-                            secondTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "PrimoC (CDMA)";
-                            changePhoneComboBox.Text = "One V";
-                        }
-                        if (line == "One X")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "One X";
-                            changePhoneComboBox.Text = "One X";
-                        }
-                        if (line == "One XL")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "One XL";
-                            gainSuperCIDButton.Enabled = true;
-                            changePhoneComboBox.Text = "One XL";
-                        }
-                        if (line == "One X+")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "International X+";
-                            secondTWRPButton.Enabled = true;
-                            secondRecoveriesGroupBox.Text = "AT&&T One X+";
-                            changePhoneComboBox.Text = "One X+";
-                        }
-                        else if (line == "Other")
-                        {
-                            changePhoneComboBox.Text = "Other";
-                        }
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -181,50 +166,33 @@ namespace WinDroid
 
             try
             {
-                if (Directory.Exists("C:/Program Files (x86)/ClockworkMod/Universal Adb Driver"))
+                if (!Directory.Exists("C:/Program Files (x86)/ClockworkMod/Universal Adb Driver") &&
+                    !Directory.Exists("C:/Program Files/ClockworkMod/Universal Adb Driver"))
                 {
-                }
-                else
-                {
-                    if (Directory.Exists("C:/Program Files/ClockworkMod/Universal Adb Driver"))
+                    if (Properties.Settings.Default.AdbDriverReminderEnabled)
                     {
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader("./Data/Settings/ADB.ini"))
+                        DialogResult installDriversDialogResult =
+                            MessageBox.Show(this,
+                                @"You are missing some ADB Drivers!" + "\n" +
+                                "They are required for your phone to connect properly with the computer. Would you like to install them now?",
+                                @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        switch (installDriversDialogResult)
                         {
-                            string line = sr.ReadToEnd();
-                            if (line == "Yes")
-                            {
-                                DialogResult dialogResult2 =
+                            case DialogResult.Yes:
+                                Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
+                                break;
+                            case DialogResult.No:
+                                DialogResult adbreminderEnabledDialogResult =
                                     MessageBox.Show(this,
-                                        @"You are missing some ADB Drivers!" + "\n" +
-                                        "They are required for your phone to connect properly with the computer. Would you like to install them now?",
-                                        @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                                if (dialogResult2 == DialogResult.Yes)
-                                {
-                                    Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
-                                }
-                                else if (dialogResult2 == DialogResult.No)
-                                {
-                                    DialogResult dialogResult3 =
-                                        MessageBox.Show(this,
-                                            @"Would you like to be reminded of this the next time you open the toolkit?",
-                                            @"Just double checking.", MessageBoxButtons.YesNo,
-                                            MessageBoxIcon.Information);
+                                        @"Would you like to be reminded of this the next time you open the toolkit?",
+                                        @"Just double checking.", MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
 
-                                    if (dialogResult3 == DialogResult.Yes)
-                                    {
-                                        
-                                        File.WriteAllText("./Data/Settings/ADB.ini", @"Yes");
-                                    }
-                                    else if (dialogResult3 == DialogResult.No)
-                                    {
-                                        sr.Close();
-                                        File.WriteAllText("./Data/Settings/ADB.ini", @"No");
-                                    }
-                                }
-                            }
+                                Properties.Settings.Default.AdbDriverReminderEnabled = adbreminderEnabledDialogResult ==
+                                                                                       DialogResult.Yes;
+                                Properties.Settings.Default.Save();
+
+                                break;
                         }
                     }
                 }
