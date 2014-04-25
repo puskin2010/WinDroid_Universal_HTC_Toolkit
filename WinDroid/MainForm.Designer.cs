@@ -151,10 +151,10 @@
             // 
             this.aboutTabPage.Controls.Add(this.choosePhoneGroupBox);
             this.aboutTabPage.Controls.Add(this.contactGroupBox);
+            this.aboutTabPage.Controls.Add(this.winDroidLabel);
             this.aboutTabPage.Controls.Add(this.donateTile);
             this.aboutTabPage.Controls.Add(this.helpTile);
             this.aboutTabPage.Controls.Add(this.requestsTile);
-            this.aboutTabPage.Controls.Add(this.winDroidLabel);
             this.aboutTabPage.HorizontalScrollbarBarColor = true;
             this.aboutTabPage.HorizontalScrollbarHighlightOnWheel = false;
             this.aboutTabPage.HorizontalScrollbarSize = 10;

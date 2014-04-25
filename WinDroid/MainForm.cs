@@ -6,7 +6,6 @@ using System.IO;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using Microsoft.VisualBasic;
-using WinDroid_Universal_HTC_Toolkit;
 using RegawMOD.Android;
 
 namespace WinDroid
@@ -213,9 +212,10 @@ namespace WinDroid
                                             @"Would you like to be reminded of this the next time you open the toolkit?",
                                             @"Just double checking.", MessageBoxButtons.YesNo,
                                             MessageBoxIcon.Information);
+
                                     if (dialogResult3 == DialogResult.Yes)
                                     {
-                                        sr.Close();
+                                        
                                         File.WriteAllText("./Data/Settings/ADB.ini", @"Yes");
                                     }
                                     else if (dialogResult3 == DialogResult.No)
@@ -2713,7 +2713,7 @@ namespace WinDroid
 
         #region Nested type: AndroidLib
 
-        public static class AndroidLib
+        private static class AndroidLib
         {
             public static string InitialCmd = "";
             public static string SecondaryCmd = "";
