@@ -8,7 +8,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 
-namespace WinDroid_Universal_HTC_Toolkit
+namespace WinDroid
 {
     public partial class PhoneDownload : MetroForm
     {
@@ -242,8 +242,8 @@ namespace WinDroid_Universal_HTC_Toolkit
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    "Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
@@ -255,10 +255,17 @@ namespace WinDroid_Universal_HTC_Toolkit
         {
             try
             {
+<<<<<<< HEAD
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
                 soffProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
+=======
+                double bytesIn = e.BytesReceived;
+                double totalBytes = e.TotalBytesToReceive;
+                double percentage = bytesIn/totalBytes*100;
+                soffProgressBar.Value = (int) Math.Truncate(percentage);
+>>>>>>> c86d32797bf4d538a156f9a0d44c7cd6785981a8
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿namespace WinDroid_Universal_HTC_Toolkit
+﻿namespace WinDroid
 {
     partial class PhoneDownload
     {

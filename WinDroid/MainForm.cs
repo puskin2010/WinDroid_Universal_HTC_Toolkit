@@ -7,7 +7,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+<<<<<<< HEAD
 using WinDroid_Universal_HTC_Toolkit;
+=======
+>>>>>>> c86d32797bf4d538a156f9a0d44c7cd6785981a8
 
 namespace WinDroid
 {
@@ -21,15 +24,19 @@ namespace WinDroid
             InitializeComponent();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void adbCommand_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                deviceRecognition.RunWorkerAsync();
+                Adb.ExecuteAdbCommand(Adb.FormAdbCommand(_device, AndroidLib.InitialCmd, AndroidLib.SecondaryCmd));
+                loadingSpinner.Visible = false;
+                backupButton.Enabled = true;
+                uninstallAppButton.Enabled = true;
+                _android.Dispose();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this,
+                MessageBox.Show(
                     @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
                     @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
@@ -37,23 +44,59 @@ namespace WinDroid
                 file.WriteLine(ex);
                 file.Close();
             }
+        }
 
-            if (Directory.Exists("./Data"))
-            {
-            }
-            else
-            {
-                MessageBox.Show(
-                    @"The Data folder is missing! Many or all functions may not work correctly, and multiple errors may arise. Please redownload the toolkit if this issue persists.",
-                    @"Missing Files!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
+        private void adbCommand_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             try
             {
-                if (File.Exists("./Data/Settings/Phone.ini"))
+                if (AndroidLib.Selector == "sideload")
                 {
-                    using (var sr = new StreamReader("./Data/Settings/Phone.ini"))
+                    sideloadROMButton.Enabled = true;
+                    MessageBox.Show(
+                        openFileDialog1.SafeFileName +
+                        @" has been successfully sideloaded! The ZIP will now automatically begin to flash on your phone.",
+                        @"Hurray for ADB Sideload!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                if (AndroidLib.Selector == "pullFile")
+                {
+                    pullFilesButton.Enabled = true;
+                    MessageBox.Show(
+                        saveFileDialog1.FileName + @" has been successfully pulled!",
+                        @"File Pull Successful!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void backupButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will create a full backup of the data on your phone." + "\n" + "\n" +
+                            @"This method can be unreliable and does not guarantee all of your data being saved in the event of unlocking your bootloader, rooting, etc." +
+                            "\n" + "\n" + @"This method only works with Android 4.0 and above." + "\n" + "\n" +
+                            @"Are you ready to continue?", @"Phone Backup", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
                     {
+<<<<<<< HEAD
                         String line = sr.ReadToEnd();
                         if (line == "None")
                         {
@@ -163,67 +206,26 @@ namespace WinDroid
                         {
                             changePhoneComboBox.Text = "Other";
                         }
+=======
+                        loadingSpinner.Visible = true;
+                        backupButton.Enabled = false;
+                        AndroidLib.InitialCmd = "backup";
+                        AndroidLib.SecondaryCmd = "-apk -all -f ./Data/Backups/" + fileDateTime + ".ab";
+                        adbCommand.RunWorkerAsync();
+                        MessageBox.Show(
+                            @"A process will now open on your phone allowing you to password protect and continue with the backup process." +
+                            "\n" + "\n" +
+                            @"Please do not disturb your phone or the toolkit until the process completes." + "\n" +
+                            "\n" + @"You may close this popup.", @"Phone Backup", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+>>>>>>> c86d32797bf4d538a156f9a0d44c7cd6785981a8
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-
-            try
-            {
-                if (Directory.Exists("C:/Program Files (x86)/ClockworkMod/Universal Adb Driver"))
-                {
                 }
                 else
                 {
-                    if (Directory.Exists("C:/Program Files/ClockworkMod/Universal Adb Driver"))
-                    {
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader("./Data/Settings/ADB.ini"))
-                        {
-                            string line = sr.ReadToEnd();
-                            if (line == "Yes")
-                            {
-                                DialogResult dialogResult2 =
-                                    MessageBox.Show(this,
-                                        @"You are missing some ADB Drivers!" + "\n" +
-                                        "They are required for your phone to connect properly with the computer. Would you like to install them now?",
-                                        @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                                if (dialogResult2 == DialogResult.Yes)
-                                {
-                                    Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
-                                }
-                                else if (dialogResult2 == DialogResult.No)
-                                {
-                                    DialogResult dialogResult3 =
-                                        MessageBox.Show(this,
-                                            @"Would you like to be reminded of this the next time you open the toolkit?",
-                                            @"Just double checking.", MessageBoxButtons.YesNo,
-                                            MessageBoxIcon.Information);
-                                    if (dialogResult3 == DialogResult.Yes)
-                                    {
-                                        sr.Close();
-                                        File.WriteAllText("./Data/Settings/ADB.ini", @"Yes");
-                                    }
-                                    else if (dialogResult3 == DialogResult.No)
-                                    {
-                                        sr.Close();
-                                        File.WriteAllText("./Data/Settings/ADB.ini", @"No");
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -238,6 +240,252 @@ namespace WinDroid
             }
         }
 
+        private void changePhoneComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            try
+            {
+                switch (changePhoneComboBox.SelectedText)
+                {
+                    case "Amaze":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "Amaze";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "HTC Amaze";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "Amaze");
+                    }
+                        break;
+                    case "Desire HD":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "Desire HD";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "HTC Desire HD";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "Desire HD");
+                    }
+                        break;
+                    case "Desire X":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "Desire X";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "Hboot 1.25 (JB)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Hboot 1.24 (ICS)";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "Desire X");
+                    }
+                        break;
+                    case "Droid DNA":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "Droid DNA";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = true;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "HTC Droid DNA";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "Droid DNA");
+                    }
+                        break;
+                    case "EVO 4G LTE":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "EVO 4G LTE";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "EVO 4G LTE";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "EVO 4G LTE");
+                    }
+                        break;
+                    case "One (M7)":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One (M7)";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "GSM One (M7)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "CDMA One (M7)";
+                        secondTWRPButton.Text = "Verizon";
+                        thirdTWRPButton.Text = "Sprint";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One (M7)");
+                    }
+                        break;
+                    case "One (M8)":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One (M8)";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "GSM One (M8)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "CDMA One (M8)";
+                        secondTWRPButton.Text = "Verizon";
+                        thirdTWRPButton.Text = "Sprint";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One (M8)");
+                    }
+                        break;
+                    case "One S":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One S";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "One S (S4)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "One S (S3_C2)";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One S");
+                    }
+                        break;
+                    case "One V":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One V";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "PrimoU (GSM)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "PrimoC (CDMA)";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One V");
+                    }
+                        break;
+                    case "One X":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One X";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "HTC One X";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One X");
+                    }
+                        break;
+                    case "One XL":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One XL";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = true;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "HTC One XL";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One XL");
+                    }
+                        break;
+                    case "One X+":
+                    {
+                        var phoneDownload = new PhoneDownload();
+                        PhoneDownload.AndroidLib.Selector = "One X+";
+                        phoneDownload.Show();
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "International X+";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "AT&&T One X+";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "One X+");
+                    }
+                        break;
+                    case "Other":
+                        gainSuperCIDButton.Enabled = false;
+                        firstTWRPButton.Enabled = false;
+                        firstRecoveriesGroupBox.Text = "Option One";
+                        secondTWRPButton.Enabled = false;
+                        thirdTWRPButton.Enabled = false;
+                        secondRecoveriesGroupBox.Text = "Option Two";
+                        secondTWRPButton.Text = "TWRP";
+                        thirdTWRPButton.Text = "CWM";
+                        mainTabControl.SelectedIndex = 0;
+                        File.WriteAllText("./Data/Settings/Phone.ini", "Other");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    "Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void CheckFileSystem()
+        {
+            string[] neededDirectories = new string[] { "Data/", "Data/Backups", "Data/Installers", "Data/Logcats", "Data/Logs", "Data/Recoveries", "Data/Settings" };
+
+            foreach (string dir in neededDirectories)
+            {
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            }
+        }
+
         private void deviceRecognition_DoWork(object sender, DoWorkEventArgs e)
         {
             _android = AndroidController.Instance;
@@ -247,12 +495,37 @@ namespace WinDroid
                 if (_android.HasConnectedDevices)
                 {
                     _device = _android.GetConnectedDevice(_android.ConnectedDevices[0]);
-                    if (_device.State.ToString() == "ONLINE")
+                    switch (_device.State.ToString())
                     {
-                        if (_device.BuildProp.GetProp("ro.product.model") == null)
-                        {
+                        case "ONLINE":
+                            if (_device.BuildProp.GetProp("ro.product.model") == null)
+                            {
+                                deviceLabel.Text = "Device: " + _device.SerialNumber;
+                                statusLabel.Text = @"Status: Online";
+                                statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
+                                    deviceLabel.Location.Y);
+                                statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
+                                    statusLabel.Location.Y);
+                                deviceProgressSpinner.Visible = false;
+                                statusProgressSpinner.Visible = false;
+                                refreshSpinner.Visible = false;
+                            }
+                            else
+                            {
+                                deviceLabel.Text = "Device: " + _device.BuildProp.GetProp("ro.product.model");
+                                statusLabel.Text = @"Status: Online";
+                                statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
+                                    deviceLabel.Location.Y);
+                                statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
+                                    statusLabel.Location.Y);
+                                deviceProgressSpinner.Visible = false;
+                                statusProgressSpinner.Visible = false;
+                                refreshSpinner.Visible = false;
+                            }
+                            break;
+                        case "FASTBOOT":
                             deviceLabel.Text = "Device: " + _device.SerialNumber;
-                            statusLabel.Text = @"Status: Online";
+                            statusLabel.Text = @"Status: Fastboot";
                             statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
                                 deviceLabel.Location.Y);
                             statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
@@ -260,11 +533,10 @@ namespace WinDroid
                             deviceProgressSpinner.Visible = false;
                             statusProgressSpinner.Visible = false;
                             refreshSpinner.Visible = false;
-                        }
-                        else
-                        {
-                            deviceLabel.Text = "Device: " + _device.BuildProp.GetProp("ro.product.model");
-                            statusLabel.Text = @"Status: Online";
+                            break;
+                        case "RECOVERY":
+                            deviceLabel.Text = "Device: " + _device.SerialNumber;
+                            statusLabel.Text = @"Status: Recovery";
                             statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
                                 deviceLabel.Location.Y);
                             statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
@@ -272,42 +544,17 @@ namespace WinDroid
                             deviceProgressSpinner.Visible = false;
                             statusProgressSpinner.Visible = false;
                             refreshSpinner.Visible = false;
-                        }
-                    }
-                    else if (_device.State.ToString() == "FASTBOOT")
-                    {
-                        deviceLabel.Text = "Device: " + _device.SerialNumber;
-                        statusLabel.Text = @"Status: Fastboot";
-                        statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
-                            deviceLabel.Location.Y);
-                        statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
-                            statusLabel.Location.Y);
-                        deviceProgressSpinner.Visible = false;
-                        statusProgressSpinner.Visible = false;
-                        refreshSpinner.Visible = false;
-                    }
-                    else if (_device.State.ToString() == "RECOVERY")
-                    {
-                        deviceLabel.Text = "Device: " + _device.SerialNumber;
-                        statusLabel.Text = @"Status: Recovery";
-                        statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
-                            deviceLabel.Location.Y);
-                        statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
-                            statusLabel.Location.Y);
-                        deviceProgressSpinner.Visible = false;
-                        statusProgressSpinner.Visible = false;
-                        refreshSpinner.Visible = false;
-                    }
-                    else if (_device.State.ToString() == "UNKNOWN")
-                    {
-                        deviceLabel.Text = "Device: " + _device.SerialNumber;
-                        statusLabel.Text = @"Status: Unknown";
-                        statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
-                            deviceLabel.Location.Y);
-                        statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
-                            statusLabel.Location.Y);
-                        deviceProgressSpinner.Visible = false;
-                        statusProgressSpinner.Visible = false;
+                            break;
+                        case "UNKNOWN":
+                            deviceLabel.Text = "Device: " + _device.SerialNumber;
+                            statusLabel.Text = @"Status: Unknown";
+                            statusLabel.Location = new Point(deviceLabel.Location.X + deviceLabel.Width,
+                                deviceLabel.Location.Y);
+                            statusProgressSpinner.Location = new Point(statusLabel.Location.X + statusLabel.Width,
+                                statusLabel.Location.Y);
+                            deviceProgressSpinner.Visible = false;
+                            statusProgressSpinner.Visible = false;
+                            break;
                     }
                     deviceProgressSpinner.Visible = false;
                     refreshSpinner.Visible = false;
@@ -339,6 +586,1010 @@ namespace WinDroid
             }
         }
 
+        private void dmesgButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    loadingSpinner.Visible = true;
+                    dmesgButton.Enabled = false;
+                    AndroidLib.InitialCmd = "dmesg";
+                    getDmesg.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void donateButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("http://forum.xda-developers.com/donatetome.php?u=4485224");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void donateTile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("http://forum.xda-developers.com/donatetome.php?u=4485224");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void emailButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("mailto:windycityrockr@gmail.com");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void firstTWRPButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (File.Exists("./Data/Recoveries/TWRP1.img"))
+                {
+                    if (statusLabel.Text == @"Status: Fastboot")
+                    {
+                        loadingSpinner.Visible = true;
+                        firstTWRPButton.Enabled = false;
+                        AndroidLib.InitialCmd = "flash";
+                        AndroidLib.SecondaryCmd = "recovery ./Data/Recoveries/TWRP1.img";
+                        AndroidLib.Selector = "firstTWRP";
+                        noReturnFastbootCommand.RunWorkerAsync();
+                    }
+                    else if (statusLabel.Text == @"Status: Online")
+                    {
+                        loadingSpinner.Visible = true;
+                        firstTWRPButton.Enabled = false;
+                        AndroidLib.InitialCmd = "reboot bootloader";
+                        AndroidLib.Selector = "firstTWRP";
+                        noReturnADBCommand.RunWorkerAsync();
+                    }
+                    else
+                    {
+                        MessageBox.Show(this,
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this, @"This recovery appears to be missing from the Data folder!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void flashKernelButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will allow you to flash a custom Kernel .img. Are you ready to continue?",
+                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a Kernel .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            flashKernelButton.Enabled = false;
+                            AndroidLib.InitialCmd = "flash";
+                            AndroidLib.SecondaryCmd = "boot " + openFileDialog1.FileName;
+                            AndroidLib.Selector = "flashKernel";
+                            noReturnFastbootCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will allow you to flash a custom Kernel .img. Are you ready to continue?",
+                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a Kernel .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            flashKernelButton.Enabled = false;
+                            AndroidLib.InitialCmd = "reboot bootloader";
+                            AndroidLib.Selector = "flashKernel";
+                            noReturnADBCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void flashROMButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will push a ROM .zip file of your choosing to your phone and boot you into Recovery. Once there, flash the ROM .zip like any other file." +
+                            "\n" + "\n" +
+                            @"Afterwards, use the 'Flash Kernel' option to flash the boot.img that came with your ROM if needed." +
+                            "\n" + "\n" +
+                            @"The process can take awhile depending on the size of the ROM." +
+                            "\n" + "\n" + @"Are you ready to continue?", @"Flash ROM", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Select your ROM .zip file.";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .ZIP|*.zip";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            flashROMButton.Enabled = false;
+                            AndroidLib.InitialCmd = openFileDialog1.FileName;
+                            AndroidLib.SecondaryCmd = "/sdcard/" + openFileDialog1.SafeFileName;
+                            AndroidLib.Selector = "flashROM";
+                            pushFile.RunWorkerAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void flashSuperSUButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will push SuperSU.zip to your phone and boot you into Recovery." + "\n" + "\n" +
+                            @"Once there, flash the SuperSU.zip like any other file." + "\n" + "\n" +
+                            @"Are you ready to continue?", @"Flash SuperSU", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        loadingSpinner.Visible = true;
+                        AndroidLib.InitialCmd = "./Data/Installers/SuperSU.zip";
+                        AndroidLib.SecondaryCmd = "/sdcard/SuperSU.zip";
+                        AndroidLib.Selector = "superSU";
+                        pushFile.RunWorkerAsync();
+                        flashSuperSUButton.Enabled = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void gainSuperCIDButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var sr = new StreamReader("./Data/Settings/Phone.ini"))
+                {
+                    String line = sr.ReadToEnd();
+                    if (line == "Droid DNA")
+                    {
+                        if (statusLabel.Text == @"Status: Online")
+                        {
+                            DialogResult dialogResult =
+                                MessageBox.Show(
+                                    @"This is an app to be installed on your phone that will automatically give you SuperCID. Would you like to download and install it now?",
+                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if (dialogResult == DialogResult.Yes)
+                            {
+                                var phoneDownload = new PhoneDownload();
+                                PhoneDownload.AndroidLib.Selector = "Droid DNA SuperCID";
+                                phoneDownload.mainLabel.Text = "Downloading SuperCID Files...";
+                                phoneDownload.Show();
+                            }
+                            if (dialogResult == DialogResult.No)
+                            {
+                                Process.Start("http://forum.xda-developers.com/showthread.php?t=2109862");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                @"A phone has not been recognized by the toolkit!",
+                                @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    if (line == "One X")
+                    {
+                        if (statusLabel.Text == @"Status: Online")
+                        {
+                            DialogResult dialogResult =
+                                MessageBox.Show(
+                                    @"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download it now?",
+                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if (dialogResult == DialogResult.Yes)
+                            {
+                                var phoneDownload = new PhoneDownload();
+                                PhoneDownload.AndroidLib.Selector = "One X SuperCID";
+                                phoneDownload.mainLabel.Text = "Downloading SuperCID...";
+                                phoneDownload.Show();
+                            }
+                            if (dialogResult == DialogResult.No)
+                            {
+                                Process.Start("http://forum.xda-developers.com/showthread.php?t=2285086");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                @"A phone has not been recognized by the toolkit! Please click the Reload button to check again!",
+                                @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getCIDButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    loadingSpinner.Visible = true;
+                    getCIDButton.Enabled = false;
+                    AndroidLib.InitialCmd = "getvar";
+                    AndroidLib.SecondaryCmd = "cid";
+                    getFastbootInfo.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getDmesg_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + "_DMESG.txt"))
+                {
+                    sw.WriteLine(Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(_device, true, AndroidLib.InitialCmd)));
+                }
+                Process.Start(Application.StartupPath + "/Data/Logcats");
+                _android.Dispose();
+                loadingSpinner.Visible = false;
+                dmesgButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getFastbootInfo_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                fastbootInformationTextBox.Text =
+                    Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(_device, AndroidLib.InitialCmd,
+                        AndroidLib.SecondaryCmd));
+                getSerialNumberButton.Enabled = true;
+                getIMEIButton.Enabled = true;
+                getCIDButton.Enabled = true;
+                getMIDButton.Enabled = true;
+                loadingSpinner.Visible = false;
+                _android.Dispose();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getIMEIButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    loadingSpinner.Visible = true;
+                    getIMEIButton.Enabled = false;
+                    AndroidLib.InitialCmd = "getvar";
+                    AndroidLib.SecondaryCmd = "imei";
+                    getFastbootInfo.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getLogcat_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + ".txt"))
+                {
+                    sw.WriteLine(
+                        Adb.ExecuteAdbCommand(Adb.FormAdbCommand(AndroidLib.InitialCmd, AndroidLib.SecondaryCmd)));
+                }
+                Process.Start(Application.StartupPath + "/Data/Logcats");
+                _android.Dispose();
+                loadingSpinner.Visible = false;
+                logcatButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getMIDButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    loadingSpinner.Visible = true;
+                    getMIDButton.Enabled = false;
+                    AndroidLib.InitialCmd = "getvar";
+                    AndroidLib.SecondaryCmd = "mid";
+                    getFastbootInfo.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getSerialNumberButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    fastbootInformationTextBox.Text = _device.SerialNumber;
+                }
+                else if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    loadingSpinner.Visible = true;
+                    getSerialNumberButton.Enabled = false;
+                    AndroidLib.InitialCmd = "getvar";
+                    AndroidLib.SecondaryCmd = "serialno";
+                    getFastbootInfo.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void getTokenIDButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(this,
+                            @"This is the first (or second) step in unlocking your bootloader." + "\n" + "\n" +
+                            @"This will retrieve your Token ID." + "\n" + "\n" +
+                            @"Once the process has completed, a text file will open with your Token ID and further instructions." +
+                            "\n" + "\n" + @"Are you ready to continue?", @"Get Token ID", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        loadingSpinner.Visible = true;
+                        getTokenIDButton.Enabled = false;
+                        AndroidLib.InitialCmd = "oem";
+                        AndroidLib.SecondaryCmd = "get_identifier_token";
+                        tokenID.RunWorkerAsync();
+                    }
+                }
+                else if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(this,
+                            @"This is the first (or second) step in unlocking your bootloader." + "\n" + "\n" +
+                            @"This will retrieve your Token ID." + "\n" + "\n" +
+                            @"Once the process has completed, a text file will open with your Token ID and further instructions." +
+                            "\n" + "\n" + @"Are you ready to continue?", @"Get Token ID", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        loadingSpinner.Visible = true;
+                        getTokenIDButton.Enabled = false;
+                        AndroidLib.InitialCmd = "reboot bootloader";
+                        AndroidLib.Selector = "tokenID";
+                        noReturnADBCommand.RunWorkerAsync();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void helpButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("http://forum.xda-developers.com/showpost.php?p=52041197&postcount=2");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void helpTile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("http://forum.xda-developers.com/showpost.php?p=52041197&postcount=2");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void installApp_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (_device.InstallApk(AndroidLib.InitialCmd).ToString() == "True")
+                {
+                    loadingSpinner.Visible = false;
+                    installAppButton.Enabled = true;
+                    MessageBox.Show(openFileDialog1.SafeFileName + @" was successfully installed!",
+                        @"Hurray for Apps!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _android.Dispose();
+                }
+                else
+                {
+                    loadingSpinner.Visible = false;
+                    installAppButton.Enabled = true;
+                    MessageBox.Show(
+                        @"An issue occured while attempting to install " + openFileDialog1.SafeFileName +
+                        @". Please try again in a few moments.", @"Houston, we have a problem!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _android.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void installAppButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    openFileDialog1.InitialDirectory = @"C:\";
+                    openFileDialog1.Title = @"Select a valid Android app file (.apk)";
+                    openFileDialog1.FileName = "Choose File...";
+                    openFileDialog1.CheckFileExists = true;
+                    openFileDialog1.CheckPathExists = true;
+                    openFileDialog1.Filter = @" .APK|*.apk";
+                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        loadingSpinner.Visible = true;
+                        AndroidLib.InitialCmd = openFileDialog1.FileName;
+                        installApp.RunWorkerAsync();
+                        installAppButton.Enabled = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void logcatButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    loadingSpinner.Visible = true;
+                    logcatButton.Enabled = false;
+                    AndroidLib.InitialCmd = "logcat";
+                    AndroidLib.SecondaryCmd = "-d";
+                    getLogcat.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                deviceRecognition.CancelAsync();
+                tokenID.CancelAsync();
+                noReturnADBCommand.CancelAsync();
+                noReturnFastbootCommand.CancelAsync();
+                pushFile.CancelAsync();
+                installApp.CancelAsync();
+                adbCommand.CancelAsync();
+                getLogcat.CancelAsync();
+                getDmesg.CancelAsync();
+                getFastbootInfo.CancelAsync();
+            }
+            catch (Exception ex)
+            {
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                deviceRecognition.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this,
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+
+            CheckFileSystem();
+            /*if (Directory.Exists("./Data"))
+            {
+            }
+            else
+            {
+                MessageBox.Show(
+                    @"The Data folder is missing! Many or all functions may not work correctly, and multiple errors may arise. Please redownload the toolkit if this issue persists.",
+                    @"Missing Files!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }*/
+
+            try
+            {
+                switch (Properties.Settings.Default.SelectedDevice)
+                {
+                    case "None":
+                        {
+                            DialogResult pickDeviceDialogResult = MessageBox.Show(this,
+                                @"Thanks for choosing the WinDroid Toolkit." + "\n" +
+                                @"A specific phone has not been chosen." + "\n" +
+                                @"Some toolkit features may not function correctly." + "\n" +
+                                @"Would you like to choose one at this time?" + "\n",
+                                @"Welcome To WinDroid!", MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Information);
+                            if (pickDeviceDialogResult == DialogResult.Yes)
+                            {
+                                changePhoneComboBox.Text = "Choose";
+                                mainTabControl.SelectedIndex = 3;
+                            }
+                        }
+                        break;
+
+                    case "Amaze":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "Amaze";
+                        changePhoneComboBox.Text = "Amaze";
+                        break;
+
+                    case "Desire HD":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "Desire HD";
+                        changePhoneComboBox.Text = "Desire HD";
+                        break;
+
+                    case "Desire X":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "Hboot 1.25 (JB)";
+                        secondTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "Hboot 1.24 (ICS)";
+                        changePhoneComboBox.Text = "Desire X";
+                        break;
+
+                    case "Droid DNA":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "Droid DNA";
+                        gainSuperCIDButton.Enabled = true;
+                        changePhoneComboBox.Text = "Droid DNA";
+                        break;
+
+                    case "EVO 4G LTE":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "EVO 4G LTE";
+                        changePhoneComboBox.Text = "EVO 4G LTE";
+                        break;
+
+                    case "One (M7)":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "GSM One (M7)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "CDMA One (M7)";
+                        secondTWRPButton.Text = "Verizon";
+                        thirdTWRPButton.Text = "Sprint";
+                        changePhoneComboBox.Text = "One (M7)";
+                        break;
+
+                    case "One (M8)":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "GSM One (M8)";
+                        secondTWRPButton.Enabled = true;
+                        thirdTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "CDMA One (M8)";
+                        secondTWRPButton.Text = "Verizon";
+                        thirdTWRPButton.Text = "Sprint";
+                        changePhoneComboBox.Text = "One (M8)";
+                        break;
+
+                    case "One S":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "One S (S4)";
+                        secondTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "One S (S3_C2) ";
+                        changePhoneComboBox.Text = "Desire X";
+                        break;
+
+                    case "One V":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "PrimoU (GSM)";
+                        secondTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "PrimoC (CDMA)";
+                        changePhoneComboBox.Text = "One V";
+                        break;
+
+                    case "One X":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "One X";
+                        changePhoneComboBox.Text = "One X";
+                        break;
+
+                    case "One XL":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "One XL";
+                        gainSuperCIDButton.Enabled = true;
+                        changePhoneComboBox.Text = "One XL";
+                        break;
+
+                    case "One X+":
+                        firstTWRPButton.Enabled = true;
+                        firstRecoveriesGroupBox.Text = "International X+";
+                        secondTWRPButton.Enabled = true;
+                        secondRecoveriesGroupBox.Text = "AT&&T One X+";
+                        changePhoneComboBox.Text = "One X+";
+                        break;
+
+                    case "Other":
+                        changePhoneComboBox.Text = "Other";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+
+            try
+            {
+                if (!Directory.Exists("C:/Program Files (x86)/ClockworkMod/Universal Adb Driver") &&
+                    !Directory.Exists("C:/Program Files/ClockworkMod/Universal Adb Driver"))
+                {
+                    if (!Properties.Settings.Default.AdbDriverReminderEnabled) return;
+                    DialogResult installDriversDialogResult =
+                        MessageBox.Show(this,
+                            @"You are missing some ADB Drivers!" + "\n" +
+                            @"They are required for your phone to connect properly with the computer. Would you like to install them now?",
+                            @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    switch (installDriversDialogResult)
+                    {
+                        case DialogResult.Yes:
+                            Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
+                            break;
+
+                        case DialogResult.No:
+                            DialogResult adbreminderEnabledDialogResult =
+                                MessageBox.Show(this,
+                                    @"Would you like to be reminded of this the next time you open the toolkit?",
+                                    @"Just double checking.", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+                            Properties.Settings.Default.AdbDriverReminderEnabled = adbreminderEnabledDialogResult ==
+                                                                                   DialogResult.Yes;
+                            Properties.Settings.Default.Save();
+
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
         private void noReturnADBCommand_DoWork(object sender, DoWorkEventArgs e)
         {
             try
@@ -578,16 +1829,69 @@ namespace WinDroid
                 file.Close();
             }
         }
-
-        private void adbCommand_DoWork(object sender, DoWorkEventArgs e)
+        private void permanentRecoveryButton_Click(object sender, EventArgs e)
         {
             try
             {
-                Adb.ExecuteAdbCommand(Adb.FormAdbCommand(_device, AndroidLib.InitialCmd, AndroidLib.SecondaryCmd));
-                loadingSpinner.Visible = false;
-                backupButton.Enabled = true;
-                uninstallAppButton.Enabled = true;
-                _android.Dispose();
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(this,
+                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
+                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
+                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a Recovery .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            permanentRecoveryButton.Enabled = false;
+                            AndroidLib.InitialCmd = "flash";
+                            AndroidLib.SecondaryCmd = "recovery " + openFileDialog1.FileName;
+                            AndroidLib.Selector = "permanentRecovery";
+                            noReturnFastbootCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(this,
+                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
+                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
+                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a Recovery .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            permanentRecoveryButton.Enabled = false;
+                            AndroidLib.InitialCmd = "reboot bootloader";
+                            AndroidLib.Selector = "permanentRecovery";
+                            noReturnADBCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -601,26 +1905,35 @@ namespace WinDroid
             }
         }
 
-        private void adbCommand_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void pullFilesButton_Click(object sender, EventArgs e)
         {
             try
             {
-                if (AndroidLib.Selector == "sideload")
+                if (statusLabel.Text == @"Status: Online")
                 {
-                    sideloadROMButton.Enabled = true;
-                    MessageBox.Show(
-                        openFileDialog1.SafeFileName +
-                        @" has been successfully sideloaded! The ZIP will now automatically begin to flash on your phone.",
-                        @"Hurray for ADB Sideload!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                    saveFileDialog1.InitialDirectory = @"C:\";
+                    saveFileDialog1.Title =
+                        @"Choose a name for your file with a file extension (.png, .apk, etc) that matches the file on your phone.";
+                    saveFileDialog1.FileName = "Save your File...";
+                    saveFileDialog1.CheckPathExists = true;
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        string location =
+                            Interaction.InputBox(
+                                "Please input the EXACT location of the file within your phone. For example, if you wanted to pull a specific file off your main storage, you would put '/sdcard/SpecificFile.file', without quotes. DO NOT PUT AN ENDING SLASH (/) IN THE LOCATION!",
+                                "Location", "", 775, 450);
+                        loadingSpinner.Visible = true;
+                        pullFilesButton.Enabled = false;
+                        AndroidLib.InitialCmd = "pull";
+                        AndroidLib.SecondaryCmd = location + " " + saveFileDialog1.FileName;
+                        adbCommand.RunWorkerAsync();
+                    }
                 }
-                if (AndroidLib.Selector == "pullFile")
+                else
                 {
-                    pullFilesButton.Enabled = true;
                     MessageBox.Show(
-                        saveFileDialog1.FileName + @" has been successfully pulled!",
-                        @"File Pull Successful!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -711,28 +2024,31 @@ namespace WinDroid
                 file.Close();
             }
         }
-
-        private void installApp_DoWork(object sender, DoWorkEventArgs e)
+        private void pushFilesButton_Click(object sender, EventArgs e)
         {
             try
             {
-                if (_device.InstallApk(AndroidLib.InitialCmd).ToString() == "True")
+                if (statusLabel.Text == @"Status: Online")
                 {
-                    loadingSpinner.Visible = false;
-                    installAppButton.Enabled = true;
-                    MessageBox.Show(openFileDialog1.SafeFileName + @" was successfully installed!",
-                        @"Hurray for Apps!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _android.Dispose();
+                    openFileDialog1.InitialDirectory = @"C:\";
+                    openFileDialog1.Title = @"Select a file";
+                    openFileDialog1.FileName = "Choose File...";
+                    openFileDialog1.CheckFileExists = true;
+                    openFileDialog1.CheckPathExists = true;
+                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        loadingSpinner.Visible = true;
+                        pushFilesButton.Enabled = false;
+                        AndroidLib.InitialCmd = openFileDialog1.FileName;
+                        AndroidLib.SecondaryCmd = "/sdcard/" + openFileDialog1.SafeFileName;
+                        pushFile.RunWorkerAsync();
+                    }
                 }
                 else
                 {
-                    loadingSpinner.Visible = false;
-                    installAppButton.Enabled = true;
                     MessageBox.Show(
-                        @"An issue occured while attempting to install " + openFileDialog1.SafeFileName +
-                        @". Please try again in a few moments.", @"Houston, we have a problem!",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    _android.Dispose();
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -747,37 +2063,143 @@ namespace WinDroid
             }
         }
 
-        private void tokenID_DoWork(object sender, DoWorkEventArgs e)
+        private void rebootBootloaderButton_Click(object sender, EventArgs e)
         {
             try
             {
-                loadingSpinner.Visible = true;
-                using (StreamWriter sw = File.CreateText("./Data/token.txt"))
+                if (statusLabel.Text == @"Status: Online")
                 {
-                    sw.WriteLine(
-                        Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(_device, AndroidLib.InitialCmd,
-                            AndroidLib.SecondaryCmd)));
-                    sw.WriteLine(" ");
-                    sw.WriteLine(
-                        "PLEASE COPY EVERYTHING FROM <<<< Indentifier Token Start >>>> TO <<<< Indentifier Token End >>>>!");
-                    sw.WriteLine("PLEASE ENSURE THAT YOU DELETE ALL (bootloader)'s AS WELL!");
-                    sw.WriteLine(" ");
-                    sw.WriteLine("NEXT, SIGN IN TO YOUR HTC DEV ACCOUNT ON THE WEBPAGE THAT JUST OPENED!");
-                    sw.WriteLine(
-                        "IF YOU DO NOT HAVE ONE, CREATE AND ACTIVATE AN ACCOUNT WITH A VALID EMAIL ADDRESS THEN COME BACK TO THAT LINK!");
-                    sw.WriteLine(
-                        "THEN, PASTE THE TOKEN ID YOU JUST COPIED AT THE BOTTOM OF THE HTCDEV WEBPAGE THAT JUST OPENED!");
-                    sw.WriteLine("HIT SUBMIT, AND WAIT FOR THE EMAIL WITH THE UNLOCK BINARY FILE!");
-                    sw.WriteLine(" ");
-                    sw.WriteLine(
-                        "ONCE YOU HAVE RECEIVED THE UNLOCK FILE IN YOUR EMAIL, YOU CAN CONTINUE ON TO THE NEXT STEP!");
-                    sw.WriteLine("THIS FILE IS SAVED AS token.txt WITHIN THE DATA FOLDER IF NEEDED FOR FUTURE USE!");
+                    loadingSpinner.Visible = true;
+                    rebootBootloaderButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot bootloader";
+                    noReturnADBCommand.RunWorkerAsync();
                 }
-                Process.Start("http://www.htcdev.com/bootloader/unlock-instructions/page-3");
-                Process.Start(Application.StartupPath + "/Data/token.txt");
-                _android.Dispose();
-                loadingSpinner.Visible = false;
-                getTokenIDButton.Enabled = true;
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void rebootButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    loadingSpinner.Visible = true;
+                    rebootButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot";
+                    noReturnADBCommand.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void rebootFromBootloaderButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    loadingSpinner.Visible = true;
+                    rebootFromBootloaderButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot";
+                    noReturnFastbootCommand.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void rebootRecoveryButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    loadingSpinner.Visible = true;
+                    rebootRecoveryButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot recovery";
+                    noReturnADBCommand.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
+
+        private void rebootToBootloaderButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    loadingSpinner.Visible = true;
+                    rebootToBootloaderButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot bootloader";
+                    noReturnADBCommand.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -811,124 +2233,30 @@ namespace WinDroid
             }
         }
 
-        private void gainSuperCIDButton_Click(object sender, EventArgs e)
+        private void relockBootloaderButton_Click(object sender, EventArgs e)
         {
             try
             {
-                using (var sr = new StreamReader("./Data/Settings/Phone.ini"))
+                if (statusLabel.Text == @"Status: Online")
                 {
-                    String line = sr.ReadToEnd();
-                    if (line == "Droid DNA")
-                    {
-                        if (statusLabel.Text == @"Status: Online")
-                        {
-                            DialogResult dialogResult =
-                                MessageBox.Show(
-                                    @"This is an app to be installed on your phone that will automatically give you SuperCID. Would you like to download and install it now?",
-                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                var phoneDownload = new PhoneDownload();
-                                PhoneDownload.AndroidLib.Selector = "Droid DNA SuperCID";
-                                phoneDownload.mainLabel.Text = "Downloading SuperCID Files...";
-                                phoneDownload.Show();
-                            }
-                            if (dialogResult == DialogResult.No)
-                            {
-                                Process.Start("http://forum.xda-developers.com/showthread.php?t=2109862");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(
-                                @"A phone has not been recognized by the toolkit!",
-                                @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    if (line == "One X")
-                    {
-                        if (statusLabel.Text == @"Status: Online")
-                        {
-                            DialogResult dialogResult =
-                                MessageBox.Show(
-                                    @"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download it now?",
-                                    @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                var phoneDownload = new PhoneDownload();
-                                PhoneDownload.AndroidLib.Selector = "One X SuperCID";
-                                phoneDownload.mainLabel.Text = "Downloading SuperCID...";
-                                phoneDownload.Show();
-                            }
-                            if (dialogResult == DialogResult.No)
-                            {
-                                Process.Start("http://forum.xda-developers.com/showthread.php?t=2285086");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(
-                                @"A phone has not been recognized by the toolkit! Please click the Reload button to check again!",
-                                @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
+                    loadingSpinner.Visible = true;
+                    relockBootloaderButton.Enabled = false;
+                    AndroidLib.InitialCmd = "reboot bootloader";
+                    AndroidLib.Selector = "relockBootloader";
+                    noReturnADBCommand.RunWorkerAsync();
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getTokenIDButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
                 if (statusLabel.Text == @"Status: Fastboot")
                 {
-                    DialogResult dialogResult =
-                        MessageBox.Show(this,
-                            @"This is the first (or second) step in unlocking your bootloader." + "\n" + "\n" +
-                            @"This will retrieve your Token ID." + "\n" + "\n" +
-                            @"Once the process has completed, a text file will open with your Token ID and further instructions." +
-                            "\n" + "\n" + @"Are you ready to continue?", @"Get Token ID", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        loadingSpinner.Visible = true;
-                        getTokenIDButton.Enabled = false;
-                        AndroidLib.InitialCmd = "oem";
-                        AndroidLib.SecondaryCmd = "get_identifier_token";
-                        tokenID.RunWorkerAsync();
-                    }
-                }
-                else if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(this,
-                            @"This is the first (or second) step in unlocking your bootloader." + "\n" + "\n" +
-                            @"This will retrieve your Token ID." + "\n" + "\n" +
-                            @"Once the process has completed, a text file will open with your Token ID and further instructions." +
-                            "\n" + "\n" + @"Are you ready to continue?", @"Get Token ID", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        loadingSpinner.Visible = true;
-                        getTokenIDButton.Enabled = false;
-                        AndroidLib.InitialCmd = "reboot bootloader";
-                        AndroidLib.Selector = "tokenID";
-                        noReturnADBCommand.RunWorkerAsync();
-                    }
+                    loadingSpinner.Visible = true;
+                    relockBootloaderButton.Enabled = false;
+                    AndroidLib.InitialCmd = "oem";
+                    AndroidLib.SecondaryCmd = "lock";
+                    AndroidLib.Selector = "relockBootloader";
+                    noReturnFastbootCommand.RunWorkerAsync();
                 }
                 else
                 {
-                    MessageBox.Show(this,
+                    MessageBox.Show(
                         @"A phone has not been recognized by the toolkit!",
                         @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -945,67 +2273,12 @@ namespace WinDroid
             }
         }
 
-        private void unlockBootloaderButton_Click(object sender, EventArgs e)
+        private void requestsTile_Click(object sender, EventArgs e)
         {
             try
             {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will unlock your bootloader and completely wipe your phone." + "\n" + "\n" +
-                            @"You must have received the unlock_code.bin file from HTC in your email, and have it downloaded and ready to be used." +
-                            "\n" + "\n" + @"Have you backed up all necessary files and are ready to continue?",
-                            @"Ready To Unlock?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Select the binary file sent to you by HTC.";
-                        openFileDialog1.FileName = "Choose unlock_code.bin...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .BIN|*.bin";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            AndroidLib.InitialCmd = "flash";
-                            AndroidLib.SecondaryCmd = "unlocktoken " + openFileDialog1.FileName;
-                            AndroidLib.Selector = "bootloaderUnlock";
-                            noReturnFastbootCommand.RunWorkerAsync();
-                        }
-                    }
-                }
-                else if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will unlock your bootloader and completely wipe your phone." + "\n" + "\n" +
-                            @"You must have received the unlock_code.bin file from HTC in your email, and have it downloaded and ready to be used." +
-                            "\n" + "\n" + @"Have you backed up all necessary files and are ready to continue?",
-                            @"Ready To Unlock?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Select the binary file sent to you by HTC.";
-                        openFileDialog1.FileName = "Choose unlock_code.bin...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .BIN|*.bin";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            AndroidLib.InitialCmd = "reboot bootloader";
-                            AndroidLib.Selector = "bootloaderUnlock";
-                            noReturnADBCommand.RunWorkerAsync();
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Process.Start(
+                    "https://docs.google.com/forms/d/1fBsKXhHilnwtqDQdJuJ9dDpxSB5cZMu5zAEWsM_ogGE/viewform?usp=send_form");
             }
             catch (Exception ex)
             {
@@ -1019,39 +2292,31 @@ namespace WinDroid
             }
         }
 
-        private void firstTWRPButton_Click(object sender, EventArgs e)
+        private void restoreButton_Click(object sender, EventArgs e)
         {
             try
             {
-                if (File.Exists("./Data/Recoveries/TWRP1.img"))
+                if (statusLabel.Text == @"Status: Online")
                 {
-                    if (statusLabel.Text == @"Status: Fastboot")
+                    openFileDialog1.InitialDirectory = @"C:\";
+                    openFileDialog1.Title = @"Please select an Android backup file (.ab)";
+                    openFileDialog1.FileName = "Choose File...";
+                    openFileDialog1.CheckFileExists = true;
+                    openFileDialog1.CheckPathExists = true;
+                    openFileDialog1.Filter = @" .AB|*.ab";
+                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
                     {
                         loadingSpinner.Visible = true;
-                        firstTWRPButton.Enabled = false;
-                        AndroidLib.InitialCmd = "flash";
-                        AndroidLib.SecondaryCmd = "recovery ./Data/Recoveries/TWRP1.img";
-                        AndroidLib.Selector = "firstTWRP";
-                        noReturnFastbootCommand.RunWorkerAsync();
-                    }
-                    else if (statusLabel.Text == @"Status: Online")
-                    {
-                        loadingSpinner.Visible = true;
-                        firstTWRPButton.Enabled = false;
-                        AndroidLib.InitialCmd = "reboot bootloader";
-                        AndroidLib.Selector = "firstTWRP";
-                        noReturnADBCommand.RunWorkerAsync();
-                    }
-                    else
-                    {
-                        MessageBox.Show(this,
-                            @"A phone has not been recognized by the toolkit!",
-                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        restoreButton.Enabled = false;
+                        AndroidLib.InitialCmd = "restore";
+                        AndroidLib.SecondaryCmd = openFileDialog1.FileName;
+                        adbCommand.RunWorkerAsync();
                     }
                 }
                 else
                 {
-                    MessageBox.Show(this, @"This recovery appears to be missing from the Data folder!",
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
                         @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1100,346 +2365,6 @@ namespace WinDroid
                 else
                 {
                     MessageBox.Show(this, @"This recovery appears to be missing from the Data folder!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void thirdTWRPButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (File.Exists("./Data/Recoveries/TWRP3.img"))
-                {
-                    if (statusLabel.Text == @"Status: Fastboot")
-                    {
-                        loadingSpinner.Visible = true;
-                        thirdTWRPButton.Enabled = false;
-                        AndroidLib.InitialCmd = "flash";
-                        AndroidLib.SecondaryCmd = "recovery ./Data/Recoveries/TWRP3.img";
-                        AndroidLib.Selector = "thirdTWRP";
-                        noReturnFastbootCommand.RunWorkerAsync();
-                    }
-                    else if (statusLabel.Text == @"Status: Online")
-                    {
-                        loadingSpinner.Visible = true;
-                        thirdTWRPButton.Enabled = false;
-                        AndroidLib.InitialCmd = "reboot bootloader";
-                        AndroidLib.Selector = "thirdTWRP";
-                        noReturnADBCommand.RunWorkerAsync();
-                    }
-                    else
-                    {
-                        MessageBox.Show(this,
-                            @"A phone has not been recognized by the toolkit!",
-                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(this, @"This recovery appears to be missing from the Data folder!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void flashSuperSUButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will push SuperSU.zip to your phone and boot you into Recovery." + "\n" + "\n" +
-                            @"Once there, flash the SuperSU.zip like any other file." + "\n" + "\n" +
-                            @"Are you ready to continue?", @"Flash SuperSU", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        loadingSpinner.Visible = true;
-                        AndroidLib.InitialCmd = "./Data/Installers/SuperSU.zip";
-                        AndroidLib.SecondaryCmd = "/sdcard/SuperSU.zip";
-                        AndroidLib.Selector = "superSU";
-                        pushFile.RunWorkerAsync();
-                        flashSuperSUButton.Enabled = false;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void flashROMButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will push a ROM .zip file of your choosing to your phone and boot you into Recovery. Once there, flash the ROM .zip like any other file." +
-                            "\n" + "\n" +
-                            @"Afterwards, use the 'Flash Kernel' option to flash the boot.img that came with your ROM if needed." +
-                            "\n" + "\n" +
-                            @"The process can take awhile depending on the size of the ROM." +
-                            "\n" + "\n" + @"Are you ready to continue?", @"Flash ROM", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Select your ROM .zip file.";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .ZIP|*.zip";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            flashROMButton.Enabled = false;
-                            AndroidLib.InitialCmd = openFileDialog1.FileName;
-                            AndroidLib.SecondaryCmd = "/sdcard/" + openFileDialog1.SafeFileName;
-                            AndroidLib.Selector = "flashROM";
-                            pushFile.RunWorkerAsync();
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void flashKernelButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will allow you to flash a custom Kernel .img. Are you ready to continue?",
-                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a Kernel .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            flashKernelButton.Enabled = false;
-                            AndroidLib.InitialCmd = "flash";
-                            AndroidLib.SecondaryCmd = "boot " + openFileDialog1.FileName;
-                            AndroidLib.Selector = "flashKernel";
-                            noReturnFastbootCommand.RunWorkerAsync();
-                        }
-                    }
-                }
-                else if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will allow you to flash a custom Kernel .img. Are you ready to continue?",
-                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a Kernel .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            flashKernelButton.Enabled = false;
-                            AndroidLib.InitialCmd = "reboot bootloader";
-                            AndroidLib.Selector = "flashKernel";
-                            noReturnADBCommand.RunWorkerAsync();
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void helpButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start("http://forum.xda-developers.com/showpost.php?p=52041197&postcount=2");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void donateButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start("http://forum.xda-developers.com/donatetome.php?u=4485224");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void rebootButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    rebootButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot";
-                    noReturnADBCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void rebootRecoveryButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    rebootRecoveryButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot recovery";
-                    noReturnADBCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void rebootBootloaderButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    rebootBootloaderButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot bootloader";
-                    noReturnADBCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
                         @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1521,404 +2446,58 @@ namespace WinDroid
             }
         }
 
-        private void pushFilesButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    openFileDialog1.InitialDirectory = @"C:\";
-                    openFileDialog1.Title = @"Select a file";
-                    openFileDialog1.FileName = "Choose File...";
-                    openFileDialog1.CheckFileExists = true;
-                    openFileDialog1.CheckPathExists = true;
-                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                    {
-                        loadingSpinner.Visible = true;
-                        pushFilesButton.Enabled = false;
-                        AndroidLib.InitialCmd = openFileDialog1.FileName;
-                        AndroidLib.SecondaryCmd = "/sdcard/" + openFileDialog1.SafeFileName;
-                        pushFile.RunWorkerAsync();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void pullFilesButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    saveFileDialog1.InitialDirectory = @"C:\";
-                    saveFileDialog1.Title =
-                        @"Choose a name for your file with a file extension (.png, .apk, etc) that matches the file on your phone.";
-                    saveFileDialog1.FileName = "Save your File...";
-                    saveFileDialog1.CheckPathExists = true;
-                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                    {
-                        string location =
-                            Interaction.InputBox(
-                                "Please input the EXACT location of the file within your phone. For example, if you wanted to pull a specific file off your main storage, you would put '/sdcard/SpecificFile.file', without quotes. DO NOT PUT AN ENDING SLASH (/) IN THE LOCATION!",
-                                "Location", "", 775, 450);
-                        loadingSpinner.Visible = true;
-                        pullFilesButton.Enabled = false;
-                        AndroidLib.InitialCmd = "pull";
-                        AndroidLib.SecondaryCmd = location + " " + saveFileDialog1.FileName;
-                        adbCommand.RunWorkerAsync();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void backupButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will create a full backup of the data on your phone." + "\n" + "\n" +
-                            @"This method can be unreliable and does not guarantee all of your data being saved in the event of unlocking your bootloader, rooting, etc." +
-                            "\n" + "\n" + @"This method only works with Android 4.0 and above." + "\n" + "\n" +
-                            @"Are you ready to continue?", @"Phone Backup", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        loadingSpinner.Visible = true;
-                        backupButton.Enabled = false;
-                        AndroidLib.InitialCmd = "backup";
-                        AndroidLib.SecondaryCmd = "-apk -all -f ./Data/Backups/" + fileDateTime + ".ab";
-                        adbCommand.RunWorkerAsync();
-                        MessageBox.Show(
-                            @"A process will now open on your phone allowing you to password protect and continue with the backup process." +
-                            "\n" + "\n" +
-                            @"Please do not disturb your phone or the toolkit until the process completes." + "\n" +
-                            "\n" + @"You may close this popup.", @"Phone Backup", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void restoreButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    openFileDialog1.InitialDirectory = @"C:\";
-                    openFileDialog1.Title = @"Please select an Android backup file (.ab)";
-                    openFileDialog1.FileName = "Choose File...";
-                    openFileDialog1.CheckFileExists = true;
-                    openFileDialog1.CheckPathExists = true;
-                    openFileDialog1.Filter = @" .AB|*.ab";
-                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                    {
-                        loadingSpinner.Visible = true;
-                        restoreButton.Enabled = false;
-                        AndroidLib.InitialCmd = "restore";
-                        AndroidLib.SecondaryCmd = openFileDialog1.FileName;
-                        adbCommand.RunWorkerAsync();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void installAppButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    openFileDialog1.InitialDirectory = @"C:\";
-                    openFileDialog1.Title = @"Select a valid Android app file (.apk)";
-                    openFileDialog1.FileName = "Choose File...";
-                    openFileDialog1.CheckFileExists = true;
-                    openFileDialog1.CheckPathExists = true;
-                    openFileDialog1.Filter = @" .APK|*.apk";
-                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                    {
-                        loadingSpinner.Visible = true;
-                        AndroidLib.InitialCmd = openFileDialog1.FileName;
-                        installApp.RunWorkerAsync();
-                        installAppButton.Enabled = false;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void uninstallAppButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    string location =
-                        Interaction.InputBox(
-                            "Please input the name of the APK package for the app you want to uninstall. For example, Adobe Reader's package file is 'com.adobe.reader'.",
-                            "Uninstall App", "", 775, 450);
-                    loadingSpinner.Visible = true;
-                    pullFilesButton.Enabled = false;
-                    AndroidLib.InitialCmd = "uninstall";
-                    AndroidLib.SecondaryCmd = location;
-                    adbCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void logcatButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    logcatButton.Enabled = false;
-                    AndroidLib.InitialCmd = "logcat";
-                    AndroidLib.SecondaryCmd = "-d";
-                    getLogcat.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getLogcat_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + ".txt"))
-                {
-                    sw.WriteLine(
-                        Adb.ExecuteAdbCommand(Adb.FormAdbCommand(AndroidLib.InitialCmd, AndroidLib.SecondaryCmd)));
-                }
-                Process.Start(Application.StartupPath + "/Data/Logcats");
-                _android.Dispose();
-                loadingSpinner.Visible = false;
-                logcatButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void dmesgButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    dmesgButton.Enabled = false;
-                    AndroidLib.InitialCmd = "dmesg";
-                    getDmesg.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getDmesg_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                using (StreamWriter sw = File.CreateText("./Data/Logcats/" + fileDateTime + "_DMESG.txt"))
-                {
-                    sw.WriteLine(Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(_device, true, AndroidLib.InitialCmd)));
-                }
-                Process.Start(Application.StartupPath + "/Data/Logcats");
-                _android.Dispose();
-                loadingSpinner.Visible = false;
-                dmesgButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void rebootToBootloaderButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    loadingSpinner.Visible = true;
-                    rebootToBootloaderButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot bootloader";
-                    noReturnADBCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void rebootFromBootloaderButton_Click(object sender, EventArgs e)
+        private void temporaryKernelButton_Click(object sender, EventArgs e)
         {
             try
             {
                 if (statusLabel.Text == @"Status: Fastboot")
                 {
-                    loadingSpinner.Visible = true;
-                    rebootFromBootloaderButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot";
-                    noReturnFastbootCommand.RunWorkerAsync();
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will allow you to temporarily boot with a custom kernel .img file without permanently flashing it. It will default to your previous kernel upon reboot. Are you ready to continue?",
+                            @"Temporary Custom Kernel Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a kernel .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            temporaryKernelButton.Enabled = false;
+                            AndroidLib.InitialCmd = "boot";
+                            AndroidLib.SecondaryCmd = openFileDialog1.FileName;
+                            AndroidLib.Selector = "flashTempKernel";
+                            noReturnFastbootCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will allow you to temporarily boot with a custom kernel .img file without permanently flashing it. It will default to your previous kernel upon reboot. Are you ready to continue?",
+                            @"Temporary Custom Kernel Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Please select a kernel .img file";
+                        openFileDialog1.FileName = "Choose File...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .IMG|*.img";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            temporaryKernelButton.Enabled = false;
+                            AndroidLib.InitialCmd = "reboot bootloader";
+                            AndroidLib.Selector = "flashTempKernel";
+                            noReturnADBCommand.RunWorkerAsync();
+                        }
+                    }
                 }
                 else
                 {
@@ -2011,293 +2590,39 @@ namespace WinDroid
             }
         }
 
-        private void temporaryKernelButton_Click(object sender, EventArgs e)
+        private void thirdTWRPButton_Click(object sender, EventArgs e)
         {
             try
             {
-                if (statusLabel.Text == @"Status: Fastboot")
+                if (File.Exists("./Data/Recoveries/TWRP3.img"))
                 {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will allow you to temporarily boot with a custom kernel .img file without permanently flashing it. It will default to your previous kernel upon reboot. Are you ready to continue?",
-                            @"Temporary Custom Kernel Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
+                    if (statusLabel.Text == @"Status: Fastboot")
                     {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a kernel .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            temporaryKernelButton.Enabled = false;
-                            AndroidLib.InitialCmd = "boot";
-                            AndroidLib.SecondaryCmd = openFileDialog1.FileName;
-                            AndroidLib.Selector = "flashTempKernel";
-                            noReturnFastbootCommand.RunWorkerAsync();
-                        }
+                        loadingSpinner.Visible = true;
+                        thirdTWRPButton.Enabled = false;
+                        AndroidLib.InitialCmd = "flash";
+                        AndroidLib.SecondaryCmd = "recovery ./Data/Recoveries/TWRP3.img";
+                        AndroidLib.Selector = "thirdTWRP";
+                        noReturnFastbootCommand.RunWorkerAsync();
                     }
-                }
-                else if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(
-                            @"This will allow you to temporarily boot with a custom kernel .img file without permanently flashing it. It will default to your previous kernel upon reboot. Are you ready to continue?",
-                            @"Temporary Custom Kernel Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
+                    else if (statusLabel.Text == @"Status: Online")
                     {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a kernel .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            temporaryKernelButton.Enabled = false;
-                            AndroidLib.InitialCmd = "reboot bootloader";
-                            AndroidLib.Selector = "flashTempKernel";
-                            noReturnADBCommand.RunWorkerAsync();
-                        }
+                        loadingSpinner.Visible = true;
+                        thirdTWRPButton.Enabled = false;
+                        AndroidLib.InitialCmd = "reboot bootloader";
+                        AndroidLib.Selector = "thirdTWRP";
+                        noReturnADBCommand.RunWorkerAsync();
                     }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getFastbootInfo_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                fastbootInformationTextBox.Text =
-                    Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(_device, AndroidLib.InitialCmd,
-                        AndroidLib.SecondaryCmd));
-                getSerialNumberButton.Enabled = true;
-                getIMEIButton.Enabled = true;
-                getCIDButton.Enabled = true;
-                getMIDButton.Enabled = true;
-                loadingSpinner.Visible = false;
-                _android.Dispose();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getSerialNumberButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Online")
-                {
-                    fastbootInformationTextBox.Text = _device.SerialNumber;
-                }
-                else if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    loadingSpinner.Visible = true;
-                    getSerialNumberButton.Enabled = false;
-                    AndroidLib.InitialCmd = "getvar";
-                    AndroidLib.SecondaryCmd = "serialno";
-                    getFastbootInfo.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getIMEIButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    loadingSpinner.Visible = true;
-                    getIMEIButton.Enabled = false;
-                    AndroidLib.InitialCmd = "getvar";
-                    AndroidLib.SecondaryCmd = "imei";
-                    getFastbootInfo.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getCIDButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    loadingSpinner.Visible = true;
-                    getCIDButton.Enabled = false;
-                    AndroidLib.InitialCmd = "getvar";
-                    AndroidLib.SecondaryCmd = "cid";
-                    getFastbootInfo.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void getMIDButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    loadingSpinner.Visible = true;
-                    getMIDButton.Enabled = false;
-                    AndroidLib.InitialCmd = "getvar";
-                    AndroidLib.SecondaryCmd = "mid";
-                    getFastbootInfo.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void permanentRecoveryButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    DialogResult dialogResult =
+                    else
+                    {
                         MessageBox.Show(this,
-                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
-                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
-                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a Recovery .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            permanentRecoveryButton.Enabled = false;
-                            AndroidLib.InitialCmd = "flash";
-                            AndroidLib.SecondaryCmd = "recovery " + openFileDialog1.FileName;
-                            AndroidLib.Selector = "permanentRecovery";
-                            noReturnFastbootCommand.RunWorkerAsync();
-                        }
-                    }
-                }
-                else if (statusLabel.Text == @"Status: Online")
-                {
-                    DialogResult dialogResult =
-                        MessageBox.Show(this,
-                            @"This will allow you to flash a custom Custom Recovery." + "\n" +
-                            "This requires a valid Recovery .IMG file." + "\n" + "Are you ready to continue?",
-                            @"Custom Recovery Flash", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        openFileDialog1.InitialDirectory = @"C:\";
-                        openFileDialog1.Title = @"Please select a Recovery .img file";
-                        openFileDialog1.FileName = "Choose File...";
-                        openFileDialog1.CheckFileExists = true;
-                        openFileDialog1.CheckPathExists = true;
-                        openFileDialog1.Filter = @" .IMG|*.img";
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            loadingSpinner.Visible = true;
-                            permanentRecoveryButton.Enabled = false;
-                            AndroidLib.InitialCmd = "reboot bootloader";
-                            AndroidLib.Selector = "permanentRecovery";
-                            noReturnADBCommand.RunWorkerAsync();
-                        }
+                            @"A phone has not been recognized by the toolkit!",
+                            @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show(this,
-                        @"A phone has not been recognized by the toolkit!",
+                    MessageBox.Show(this, @"This recovery appears to be missing from the Data folder!",
                         @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -2313,52 +2638,14 @@ namespace WinDroid
             }
         }
 
-        private void relockBootloaderButton_Click(object sender, EventArgs e)
+        private void tokenID_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                if (statusLabel.Text == @"Status: Online")
+                loadingSpinner.Visible = true;
+                using (StreamWriter sw = File.CreateText("./Data/token.txt"))
                 {
-                    loadingSpinner.Visible = true;
-                    relockBootloaderButton.Enabled = false;
-                    AndroidLib.InitialCmd = "reboot bootloader";
-                    AndroidLib.Selector = "relockBootloader";
-                    noReturnADBCommand.RunWorkerAsync();
-                }
-                if (statusLabel.Text == @"Status: Fastboot")
-                {
-                    loadingSpinner.Visible = true;
-                    relockBootloaderButton.Enabled = false;
-                    AndroidLib.InitialCmd = "oem";
-                    AndroidLib.SecondaryCmd = "lock";
-                    AndroidLib.Selector = "relockBootloader";
-                    noReturnFastbootCommand.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        @"A phone has not been recognized by the toolkit!",
-                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void changePhoneComboBox_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            try
-            {
-                if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("Amaze"))
-                {
+<<<<<<< HEAD
                     var phoneDownload = new PhoneDownload();
                     PhoneDownload.AndroidLib.Selector = "Amaze";
                     phoneDownload.Show();
@@ -2546,49 +2833,32 @@ namespace WinDroid
                     thirdTWRPButton.Text = "CWM";
                     mainTabControl.SelectedIndex = 0;
                     File.WriteAllText("./Data/Settings/Phone.ini", "Other");
+=======
+                    sw.WriteLine(
+                        Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(_device, AndroidLib.InitialCmd,
+                            AndroidLib.SecondaryCmd)));
+                    sw.WriteLine(" ");
+                    sw.WriteLine(
+                        "PLEASE COPY EVERYTHING FROM <<<< Indentifier Token Start >>>> TO <<<< Indentifier Token End >>>>!");
+                    sw.WriteLine("PLEASE ENSURE THAT YOU DELETE ALL (bootloader)'s AS WELL!");
+                    sw.WriteLine(" ");
+                    sw.WriteLine("NEXT, SIGN IN TO YOUR HTC DEV ACCOUNT ON THE WEBPAGE THAT JUST OPENED!");
+                    sw.WriteLine(
+                        "IF YOU DO NOT HAVE ONE, CREATE AND ACTIVATE AN ACCOUNT WITH A VALID EMAIL ADDRESS THEN COME BACK TO THAT LINK!");
+                    sw.WriteLine(
+                        "THEN, PASTE THE TOKEN ID YOU JUST COPIED AT THE BOTTOM OF THE HTCDEV WEBPAGE THAT JUST OPENED!");
+                    sw.WriteLine("HIT SUBMIT, AND WAIT FOR THE EMAIL WITH THE UNLOCK BINARY FILE!");
+                    sw.WriteLine(" ");
+                    sw.WriteLine(
+                        "ONCE YOU HAVE RECEIVED THE UNLOCK FILE IN YOUR EMAIL, YOU CAN CONTINUE ON TO THE NEXT STEP!");
+                    sw.WriteLine("THIS FILE IS SAVED AS token.txt WITHIN THE DATA FOLDER IF NEEDED FOR FUTURE USE!");
+>>>>>>> c86d32797bf4d538a156f9a0d44c7cd6785981a8
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    "An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    "Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                deviceRecognition.CancelAsync();
-                tokenID.CancelAsync();
-                noReturnADBCommand.CancelAsync();
-                noReturnFastbootCommand.CancelAsync();
-                pushFile.CancelAsync();
-                installApp.CancelAsync();
-                adbCommand.CancelAsync();
-                getLogcat.CancelAsync();
-                getDmesg.CancelAsync();
-                getFastbootInfo.CancelAsync();
-            }
-            catch (Exception ex)
-            {
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void donateTile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start("http://forum.xda-developers.com/donatetome.php?u=4485224");
+                Process.Start("http://www.htcdev.com/bootloader/unlock-instructions/page-3");
+                Process.Start(Application.StartupPath + "/Data/token.txt");
+                _android.Dispose();
+                loadingSpinner.Visible = false;
+                getTokenIDButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -2601,44 +2871,6 @@ namespace WinDroid
                 file.Close();
             }
         }
-
-        private void requestsTile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start(
-                    "https://docs.google.com/forms/d/1fBsKXhHilnwtqDQdJuJ9dDpxSB5cZMu5zAEWsM_ogGE/viewform?usp=send_form");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
-        private void helpTile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start("http://forum.xda-developers.com/showpost.php?p=52041197&postcount=2");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
-                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
-                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
-                file.WriteLine(ex);
-                file.Close();
-            }
-        }
-
         private void twitterButton_Click(object sender, EventArgs e)
         {
             try
@@ -2657,11 +2889,28 @@ namespace WinDroid
             }
         }
 
-        private void emailButton_Click(object sender, EventArgs e)
+        private void uninstallAppButton_Click(object sender, EventArgs e)
         {
             try
             {
-                Process.Start("mailto:windycityrockr@gmail.com");
+                if (statusLabel.Text == @"Status: Online")
+                {
+                    string location =
+                        Interaction.InputBox(
+                            "Please input the name of the APK package for the app you want to uninstall. For example, Adobe Reader's package file is 'com.adobe.reader'.",
+                            "Uninstall App", "", 775, 450);
+                    loadingSpinner.Visible = true;
+                    pullFilesButton.Enabled = false;
+                    AndroidLib.InitialCmd = "uninstall";
+                    AndroidLib.SecondaryCmd = location;
+                    adbCommand.RunWorkerAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -2675,6 +2924,79 @@ namespace WinDroid
             }
         }
 
+        private void unlockBootloaderButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (statusLabel.Text == @"Status: Fastboot")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will unlock your bootloader and completely wipe your phone." + "\n" + "\n" +
+                            @"You must have received the unlock_code.bin file from HTC in your email, and have it downloaded and ready to be used." +
+                            "\n" + "\n" + @"Have you backed up all necessary files and are ready to continue?",
+                            @"Ready To Unlock?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Select the binary file sent to you by HTC.";
+                        openFileDialog1.FileName = "Choose unlock_code.bin...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .BIN|*.bin";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            AndroidLib.InitialCmd = "flash";
+                            AndroidLib.SecondaryCmd = "unlocktoken " + openFileDialog1.FileName;
+                            AndroidLib.Selector = "bootloaderUnlock";
+                            noReturnFastbootCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else if (statusLabel.Text == @"Status: Online")
+                {
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            @"This will unlock your bootloader and completely wipe your phone." + "\n" + "\n" +
+                            @"You must have received the unlock_code.bin file from HTC in your email, and have it downloaded and ready to be used." +
+                            "\n" + "\n" + @"Have you backed up all necessary files and are ready to continue?",
+                            @"Ready To Unlock?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        openFileDialog1.InitialDirectory = @"C:\";
+                        openFileDialog1.Title = @"Select the binary file sent to you by HTC.";
+                        openFileDialog1.FileName = "Choose unlock_code.bin...";
+                        openFileDialog1.CheckFileExists = true;
+                        openFileDialog1.CheckPathExists = true;
+                        openFileDialog1.Filter = @" .BIN|*.bin";
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            loadingSpinner.Visible = true;
+                            AndroidLib.InitialCmd = "reboot bootloader";
+                            AndroidLib.Selector = "bootloaderUnlock";
+                            noReturnADBCommand.RunWorkerAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this,
+                        @"A phone has not been recognized by the toolkit!",
+                        @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    @"An error has occured! A log file has been placed in the Logs folder within the Data folder. Please send the file to WindyCityRockr or post the file in the toolkit thread.",
+                    @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileDateTime = DateTime.Now.ToString("MMddyyyy") + "_" + DateTime.Now.ToString("HHmmss");
+                var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
+                file.WriteLine(ex);
+                file.Close();
+            }
+        }
         private void xdaButton_Click(object sender, EventArgs e)
         {
             try
@@ -2695,7 +3017,7 @@ namespace WinDroid
 
         #region Nested type: AndroidLib
 
-        public static class AndroidLib
+        private static class AndroidLib
         {
             public static string InitialCmd = "";
             public static string SecondaryCmd = "";
