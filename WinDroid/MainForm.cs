@@ -37,7 +37,8 @@ namespace WinDroid
                 file.Close();
             }
 
-            if (Directory.Exists("./Data"))
+            CheckFileSystem();
+            /*if (Directory.Exists("./Data"))
             {
             }
             else
@@ -45,7 +46,7 @@ namespace WinDroid
                 MessageBox.Show(
                     @"The Data folder is missing! Many or all functions may not work correctly, and multiple errors may arise. Please redownload the toolkit if this issue persists.",
                     @"Missing Files!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            }*/
 
             try
             {
@@ -169,31 +170,29 @@ namespace WinDroid
                 if (!Directory.Exists("C:/Program Files (x86)/ClockworkMod/Universal Adb Driver") &&
                     !Directory.Exists("C:/Program Files/ClockworkMod/Universal Adb Driver"))
                 {
-                    if (Properties.Settings.Default.AdbDriverReminderEnabled)
+                    if (!Properties.Settings.Default.AdbDriverReminderEnabled) return;
+                    DialogResult installDriversDialogResult =
+                        MessageBox.Show(this,
+                            @"You are missing some ADB Drivers!" + "\n" +
+                            @"They are required for your phone to connect properly with the computer. Would you like to install them now?",
+                            @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    switch (installDriversDialogResult)
                     {
-                        DialogResult installDriversDialogResult =
-                            MessageBox.Show(this,
-                                @"You are missing some ADB Drivers!" + "\n" +
-                                "They are required for your phone to connect properly with the computer. Would you like to install them now?",
-                                @"Hang on a second!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        switch (installDriversDialogResult)
-                        {
-                            case DialogResult.Yes:
-                                Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
-                                break;
-                            case DialogResult.No:
-                                DialogResult adbreminderEnabledDialogResult =
-                                    MessageBox.Show(this,
-                                        @"Would you like to be reminded of this the next time you open the toolkit?",
-                                        @"Just double checking.", MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Question);
+                        case DialogResult.Yes:
+                            Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
+                            break;
+                        case DialogResult.No:
+                            DialogResult adbreminderEnabledDialogResult =
+                                MessageBox.Show(this,
+                                    @"Would you like to be reminded of this the next time you open the toolkit?",
+                                    @"Just double checking.", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
 
-                                Properties.Settings.Default.AdbDriverReminderEnabled = adbreminderEnabledDialogResult ==
-                                                                                       DialogResult.Yes;
-                                Properties.Settings.Default.Save();
+                            Properties.Settings.Default.AdbDriverReminderEnabled = adbreminderEnabledDialogResult ==
+                                                                                   DialogResult.Yes;
+                            Properties.Settings.Default.Save();
 
-                                break;
-                        }
+                            break;
                     }
                 }
             }
@@ -206,6 +205,16 @@ namespace WinDroid
                 var file = new StreamWriter("./Data/Logs/" + fileDateTime + ".txt");
                 file.WriteLine(ex);
                 file.Close();
+            }
+        }
+
+        private void CheckFileSystem()
+        {
+            string[] neededDirectories = new string[] { "Data/", "Data/Backups", "Data/Installers", "Data/Logcats", "Data/Logs", "Data/Recoveries", "Data/Settings" };
+
+            foreach (string dir in neededDirectories)
+            {
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
             }
         }
 
