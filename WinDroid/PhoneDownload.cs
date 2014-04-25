@@ -255,17 +255,11 @@ namespace WinDroid
         {
             try
             {
-<<<<<<< HEAD
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
-                soffProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
-=======
                 double bytesIn = e.BytesReceived;
                 double totalBytes = e.TotalBytesToReceive;
-                double percentage = bytesIn/totalBytes*100;
-                soffProgressBar.Value = (int) Math.Truncate(percentage);
->>>>>>> c86d32797bf4d538a156f9a0d44c7cd6785981a8
+                double percentage = bytesIn / totalBytes * 100;
+                soffProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
+                soffProgressBar.Value = (int)Math.Truncate(percentage);
             }
             catch (Exception ex)
             {
