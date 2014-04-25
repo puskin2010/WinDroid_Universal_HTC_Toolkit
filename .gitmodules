@@ -1,3 +1,3 @@
-[submodule "Depencies/AndroidLib"]
-	path = Depencies/AndroidLib
+[submodule "Dependencies/AndroidLib"]
+	path = Dependencies/AndroidLib
 	url = https://github.com/regaw-leinad/AndroidLib

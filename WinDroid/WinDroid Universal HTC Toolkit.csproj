@@ -35,7 +35,13 @@
   <PropertyGroup>
     <ApplicationIcon>WinDroid.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WinDroid.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AndroidLib">
+      <HintPath>..\Dependencies\AndroidLib\AndroidLib.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
@@ -101,12 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="WinDroid.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Depencies\AndroidLib\AndroidLib\AndroidLib.csproj">
-      <Project>{f5f92f16-c783-4b17-b725-b06f1d725b9c}</Project>
-      <Name>AndroidLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

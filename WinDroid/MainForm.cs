@@ -1,13 +1,13 @@
-﻿using System;
+﻿using MetroFramework.Forms;
+using Microsoft.VisualBasic;
+using RegawMOD.Android;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using MetroFramework.Forms;
-using Microsoft.VisualBasic;
 using WinDroid_Universal_HTC_Toolkit;
-using RegawMOD.Android;
 
 namespace WinDroid
 {
@@ -73,13 +73,13 @@ namespace WinDroid
                         if (line == "Amaze")
                         {
                             firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Amaze";
+                            firstRecoveriesGroupBox.Text = "HTC Amaze";
                             changePhoneComboBox.Text = "Amaze";
                         }
                         if (line == "Desire HD")
                         {
                             firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Desire HD";
+                            firstRecoveriesGroupBox.Text = "HTC Desire HD";
                             changePhoneComboBox.Text = "Desire HD";
                         }
                         if (line == "Desire X")
@@ -93,7 +93,7 @@ namespace WinDroid
                         if (line == "Droid DNA")
                         {
                             firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "Droid DNA";
+                            firstRecoveriesGroupBox.Text = "HTC Droid DNA";
                             gainSuperCIDButton.Enabled = true;
                             changePhoneComboBox.Text = "Droid DNA";
                         }
@@ -144,20 +144,17 @@ namespace WinDroid
                         if (line == "One X")
                         {
                             firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "One X";
-                            changePhoneComboBox.Text = "One X";
-                        }
-                        if (line == "One XL")
-                        {
-                            firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "One XL";
+                            firstRecoveriesGroupBox.Text = "HTC One X";
+                            secondTWRPButton.Enabled = true;
+                            secondRecoveriesGroupBox.Text = "AT&&T One X";
                             gainSuperCIDButton.Enabled = true;
-                            changePhoneComboBox.Text = "One XL";
+                            gainSuperCIDButton.Text = "AT&&T One X ONLY";
+                            changePhoneComboBox.Text = "One X";
                         }
                         if (line == "One X+")
                         {
                             firstTWRPButton.Enabled = true;
-                            firstRecoveriesGroupBox.Text = "International X+";
+                            firstRecoveriesGroupBox.Text = "HTC One X+";
                             secondTWRPButton.Enabled = true;
                             secondRecoveriesGroupBox.Text = "AT&&T One X+";
                             changePhoneComboBox.Text = "One X+";
@@ -844,22 +841,22 @@ namespace WinDroid
                         else
                         {
                             MessageBox.Show(
-                                @"A phone has not been recognized by the toolkit! Please click the Reload button to check again!",
+                                @"A phone has not been recognized by the toolkit!",
                                 @"Houston, we have a problem!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                    if (line == "One XL")
+                    if (line == "One X")
                     {
                         if (statusLabel.Text == @"Status: Online")
                         {
                             DialogResult dialogResult =
                                 MessageBox.Show(
-                                    @"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download and install it now?",
+                                    @"To unlock your bootloader, you must gain SuperCID on your phone through a special program. Would you like to download it now?",
                                     @"SuperCID", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if (dialogResult == DialogResult.Yes)
                             {
                                 var phoneDownload = new PhoneDownload();
-                                PhoneDownload.AndroidLib.Selector = "One XL SuperCID";
+                                PhoneDownload.AndroidLib.Selector = "One X SuperCID";
                                 phoneDownload.mainLabel.Text = "Downloading SuperCID...";
                                 phoneDownload.Show();
                             }
@@ -2509,32 +2506,17 @@ namespace WinDroid
                     var phoneDownload = new PhoneDownload();
                     PhoneDownload.AndroidLib.Selector = "One X";
                     phoneDownload.Show();
-                    gainSuperCIDButton.Enabled = false;
+                    gainSuperCIDButton.Enabled = true;
+                    gainSuperCIDButton.Text = "AT&&T One X ONLY";
                     firstTWRPButton.Enabled = true;
                     firstRecoveriesGroupBox.Text = "HTC One X";
-                    secondTWRPButton.Enabled = false;
+                    secondTWRPButton.Enabled = true;
+                    secondRecoveriesGroupBox.Text = "AT&&T One X";
                     thirdTWRPButton.Enabled = false;
-                    secondRecoveriesGroupBox.Text = "Option Two";
                     secondTWRPButton.Text = "TWRP";
                     thirdTWRPButton.Text = "CWM";
                     mainTabControl.SelectedIndex = 0;
                     File.WriteAllText("./Data/Settings/Phone.ini", "One X");
-                }
-                if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One XL"))
-                {
-                    var phoneDownload = new PhoneDownload();
-                    PhoneDownload.AndroidLib.Selector = "One XL";
-                    phoneDownload.Show();
-                    gainSuperCIDButton.Enabled = true;
-                    firstTWRPButton.Enabled = true;
-                    firstRecoveriesGroupBox.Text = "HTC One XL";
-                    secondTWRPButton.Enabled = false;
-                    thirdTWRPButton.Enabled = false;
-                    secondRecoveriesGroupBox.Text = "Option Two";
-                    secondTWRPButton.Text = "TWRP";
-                    thirdTWRPButton.Text = "CWM";
-                    mainTabControl.SelectedIndex = 0;
-                    File.WriteAllText("./Data/Settings/Phone.ini", "One XL");
                 }
                 if (changePhoneComboBox.SelectedIndex == changePhoneComboBox.Items.IndexOf("One X+"))
                 {
@@ -2720,6 +2702,6 @@ namespace WinDroid
             public static string Selector = "";
         }
 
-        #endregion
+        #endregion Nested type: AndroidLib
     }
 }

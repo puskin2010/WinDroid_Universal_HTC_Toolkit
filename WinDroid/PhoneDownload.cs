@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Ionic.Zip;
+using MetroFramework.Forms;
+using RegawMOD.Android;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Ionic.Zip;
-using MetroFramework.Forms;
-using RegawMOD.Android;
 
 namespace WinDroid_Universal_HTC_Toolkit
 {
@@ -60,176 +60,182 @@ namespace WinDroid_Universal_HTC_Toolkit
                 switch (AndroidLib.Selector)
                 {
                     case "Amaze":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRFFqc2FMeGJZTTQ"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRFFqc2FMeGJZTTQ"),
+                                "./Data/Recoveries/TWRP1.img");
+                        }
                         break;
+
                     case "Desire HD":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CdkUtT0RXaXVIT2s"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CdkUtT0RXaXVIT2s"),
+                                "./Data/Recoveries/TWRP1.img");
+                        }
                         break;
+
                     case "Desire X":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CUGJpcTQ1NmItMGM"),
-                            "./Data/Recoveries/TWRP1.img"); //HBOOT 1.25 (JB)
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWpPSU5MVnJNbHc"),
-                            "./Data/Recoveries/TWRP2.img"); //HBOOT 1.24 (ICS)
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CUGJpcTQ1NmItMGM"),
+                                "./Data/Recoveries/TWRP1.img"); //HBOOT 1.25 (JB)
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWpPSU5MVnJNbHc"),
+                                "./Data/Recoveries/TWRP2.img"); //HBOOT 1.24 (ICS)
+                        }
                         break;
+
                     case "Droid DNA":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cb01yVUh4bTBGQXc"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cb01yVUh4bTBGQXc"),
+                                "./Data/Recoveries/TWRP1.img");
+                        }
                         break;
+
                     case "Droid DNA SuperCID":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CalZNMkhyTzNvdW8"),
-                            "./Data/Installers/SuperCID.apk");
-                    }
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CalZNMkhyTzNvdW8"),
+                                "./Data/Installers/SuperCID.apk");
+                        }
                         break;
+
                     case "EVO 4G LTE":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWw0WkdGcEZMV0k"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWw0WkdGcEZMV0k"),
+                                "./Data/Recoveries/TWRP1.img");
+                        }
                         break;
+
                     case "One (M7)":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        var client3 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CTUZyYUtOaGNxM3c"),
-                            "./Data/Recoveries/TWRP1.img"); //GSM
-                        client3.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CY0JSbDVjMklCV3M"),
-                            "./Data/Recoveries/TWRP2.img"); //Verzion
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWFFeHRLalJlMGc"),
-                            "./Data/Recoveries/TWRP3.img"); //Sprint
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            var client3 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CTUZyYUtOaGNxM3c"),
+                                "./Data/Recoveries/TWRP1.img"); //GSM
+                            client3.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CY0JSbDVjMklCV3M"),
+                                "./Data/Recoveries/TWRP2.img"); //Verzion
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CaWFFeHRLalJlMGc"),
+                                "./Data/Recoveries/TWRP3.img"); //Sprint
+                        }
                         break;
+
                     case "One (M8)":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        var client3 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CMTBzd2hFSEFUZjQ"),
-                            "./Data/Recoveries/TWRP1.img"); //GSM
-                        client3.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CLUp4X19TOW8yeHM"),
-                            "./Data/Recoveries/TWRP2.img"); //Verizon
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CQlo1cGh0dXdYZjQ"),
-                            "./Data/Recoveries/TWRP3.img"); //Sprint
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            var client3 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CMTBzd2hFSEFUZjQ"),
+                                "./Data/Recoveries/TWRP1.img"); //GSM
+                            client3.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CLUp4X19TOW8yeHM"),
+                                "./Data/Recoveries/TWRP2.img"); //Verizon
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CQlo1cGh0dXdYZjQ"),
+                                "./Data/Recoveries/TWRP3.img"); //Sprint
+                        }
                         break;
+
                     case "One S":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cd1hSbVNrUXFOU2c"),
-                            "./Data/Recoveries/TWRP1.img"); //S4
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CdGg1TE11cF9wVnc"),
-                            "./Data/Recoveries/TWRP2.img"); //S3_C2
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cd1hSbVNrUXFOU2c"),
+                                "./Data/Recoveries/TWRP1.img"); //S4
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CdGg1TE11cF9wVnc"),
+                                "./Data/Recoveries/TWRP2.img"); //S3_C2
+                        }
                         break;
+
                     case "One V":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cc1dIdVFiS2hvcXc"),
-                            "./Data/Recoveries/TWRP1.img"); //GSM
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRHVMMnlVVGVEVjg"),
-                            "./Data/Recoveries/TWRP2.img"); //CDMA
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2Cc1dIdVFiS2hvcXc"),
+                                "./Data/Recoveries/TWRP1.img"); //GSM
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRHVMMnlVVGVEVjg"),
+                                "./Data/Recoveries/TWRP2.img"); //CDMA
+                        }
                         break;
+
                     case "One X":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CSEw4MlFVRlhKU1U"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CSEw4MlFVRlhKU1U"),
+                                "./Data/Recoveries/TWRP1.img");
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CQjRjUFJ5MEg5aDQ"),
+                                "./Data/Recoveries/TWRP2.img");
+                        }
                         break;
-                    case "One XL":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CQjRjUFJ5MEg5aDQ"),
-                            "./Data/Recoveries/TWRP1.img");
-                    }
+
+                    case "One X SuperCID":
+                        {
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CLXFpajlGNllZQjQ"),
+                                "./Data/Installers/SuperCID.zip");
+                        }
                         break;
-                    case "One XL SuperCID":
-                    {
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CLXFpajlGNllZQjQ"),
-                            "./Data/Installers/SuperCID.zip");
-                    }
-                        break;
+
                     case "One X+":
-                    {
-                        var client = new WebClient();
-                        var client2 = new WebClient();
-                        client2.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRWRfbENONk9wa3M"),
-                            "./Data/Recoveries/TWRP1.img"); //International
-                        client.DownloadProgressChanged += (client_DownloadProgressChanged);
-                        client.DownloadFileCompleted += (client_DownloadFileCompleted);
-                        client.DownloadFileAsync(
-                            new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CZHRxY0JyNGZ3WEU"),
-                            "./Data/Recoveries/TWRP2.img"); //AT&T
-                    }
+                        {
+                            var client = new WebClient();
+                            var client2 = new WebClient();
+                            client2.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CRWRfbENONk9wa3M"),
+                                "./Data/Recoveries/TWRP1.img"); //International
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CZHRxY0JyNGZ3WEU"),
+                                "./Data/Recoveries/TWRP2.img"); //AT&T
+                        }
                         break;
                 }
             }
@@ -251,7 +257,7 @@ namespace WinDroid_Universal_HTC_Toolkit
             {
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn/totalBytes*100;
+                double percentage = bytesIn / totalBytes * 100;
                 soffProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
             }
             catch (Exception ex)
@@ -316,9 +322,9 @@ namespace WinDroid_Universal_HTC_Toolkit
                     installApp.RunWorkerAsync();
                     Close();
                 }
-                else if (AndroidLib.Selector == "One XL SuperCID")
+                else if (AndroidLib.Selector == "One X SuperCID")
                 {
-                    using(ZipFile zip = ZipFile.Read("./Data/Installers/SuperCID.zip"))
+                    using (ZipFile zip = ZipFile.Read("./Data/Installers/SuperCID.zip"))
                     {
                         zip.ExtractAll("./Data/Installers");
                     }
@@ -389,6 +395,6 @@ namespace WinDroid_Universal_HTC_Toolkit
             public static string Selector = "";
         }
 
-        #endregion
+        #endregion Nested type: AndroidLib
     }
 }
