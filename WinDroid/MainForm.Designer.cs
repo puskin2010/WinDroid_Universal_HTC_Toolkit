@@ -37,10 +37,10 @@
             this.xdaButton = new MetroFramework.Controls.MetroButton();
             this.twitterButton = new MetroFramework.Controls.MetroButton();
             this.emailButton = new MetroFramework.Controls.MetroButton();
+            this.winDroidLabel = new MetroFramework.Controls.MetroLabel();
             this.donateTile = new MetroFramework.Controls.MetroTile();
             this.helpTile = new MetroFramework.Controls.MetroTile();
             this.requestsTile = new MetroFramework.Controls.MetroTile();
-            this.winDroidLabel = new MetroFramework.Controls.MetroLabel();
             this.fastbootTabPage = new MetroFramework.Controls.MetroTabPage();
             this.permanentFlashGroupBox = new System.Windows.Forms.GroupBox();
             this.permanentRecoveryButton = new MetroFramework.Controls.MetroButton();
@@ -195,7 +195,6 @@
             "One S",
             "One V",
             "One X",
-            "One XL",
             "One X+",
             "Other"});
             this.changePhoneComboBox.Location = new System.Drawing.Point(6, 19);
@@ -255,6 +254,20 @@
             this.emailButton.UseSelectable = true;
             this.emailButton.Click += new System.EventHandler(this.emailButton_Click);
             // 
+            // winDroidLabel
+            // 
+            this.winDroidLabel.AutoSize = true;
+            this.winDroidLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.winDroidLabel.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.winDroidLabel.Location = new System.Drawing.Point(5, 3);
+            this.winDroidLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.winDroidLabel.Name = "winDroidLabel";
+            this.winDroidLabel.Size = new System.Drawing.Size(336, 25);
+            this.winDroidLabel.TabIndex = 69;
+            this.winDroidLabel.Text = "Universal HTC Toolkit by WindyCityRockr";
+            this.winDroidLabel.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.winDroidLabel.UseStyleColors = true;
+            // 
             // donateTile
             // 
             this.donateTile.ActiveControl = null;
@@ -299,20 +312,6 @@
             this.requestsTile.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.requestsTile.UseSelectable = true;
             this.requestsTile.Click += new System.EventHandler(this.requestsTile_Click);
-            // 
-            // winDroidLabel
-            // 
-            this.winDroidLabel.AutoSize = true;
-            this.winDroidLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.winDroidLabel.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-            this.winDroidLabel.Location = new System.Drawing.Point(5, 3);
-            this.winDroidLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.winDroidLabel.Name = "winDroidLabel";
-            this.winDroidLabel.Size = new System.Drawing.Size(336, 25);
-            this.winDroidLabel.TabIndex = 69;
-            this.winDroidLabel.Text = "Universal HTC Toolkit by WindyCityRockr";
-            this.winDroidLabel.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.winDroidLabel.UseStyleColors = true;
             // 
             // fastbootTabPage
             // 
@@ -962,7 +961,7 @@
             this.mainTabControl.Controls.Add(this.aboutTabPage);
             this.mainTabControl.Location = new System.Drawing.Point(23, 63);
             this.mainTabControl.Name = "mainTabControl";
-            this.mainTabControl.SelectedIndex = 0;
+            this.mainTabControl.SelectedIndex = 3;
             this.mainTabControl.Size = new System.Drawing.Size(355, 207);
             this.mainTabControl.TabIndex = 1;
             this.mainTabControl.UseSelectable = true;
