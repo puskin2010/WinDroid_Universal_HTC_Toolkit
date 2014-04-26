@@ -59,6 +59,18 @@ namespace WinDroid
 
                 switch (AndroidLib.Selector)
                 {
+                    case "ADB":
+                        {
+                            mainLabel.Text = "Downloading Drivers...";
+                            var client = new WebClient();
+                            client.DownloadProgressChanged += (client_DownloadProgressChanged);
+                            client.DownloadFileCompleted += (client_DownloadFileCompleted);
+                            client.DownloadFileAsync(
+                                new Uri("https://docs.google.com/uc?export=download&id=0BzIE430dYN2CbDZlaXZZZko1ZDA"),
+                                "./Data/Installers/ADBDriver.msi");
+                        }
+                        break;
+
                     case "Amaze":
                         {
                             var client = new WebClient();
@@ -332,6 +344,11 @@ namespace WinDroid
                     File.Delete("./Data/Installers/SuperCID.zip");
                     soffProgressBar.Value = 100;
                     Process.Start(Application.StartupPath + "/Data/Installers/run.bat");
+                    Close();
+                }
+                else if (AndroidLib.Selector == "ADB")
+                {
+                    Process.Start(Application.StartupPath + "/Data/Installers/ADBDriver.msi");
                     Close();
                 }
                 else
